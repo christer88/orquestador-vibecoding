@@ -42,7 +42,7 @@ export default {
             </div>
             <p class="card__description" style="margin-bottom: var(--space-4);">${p.description || 'Sin descripción'}</p>
           </div>
-          <div class="card__actions" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: var(--space-4); border-top: 1px solid var(--border); justify-content: flex-end;">
+          <div class="card__actions" style="display: flex; gap: var(--space-3); margin-top: auto; padding-top: var(--space-4); border-top: 1px solid var(--border); justify-content: flex-end; align-items: center; flex-wrap: nowrap; overflow: visible;">
             <button class="btn btn--secondary btn--sm" onclick="window.location.hash='#wizard?id=${p.id}'">✏️ Editar</button>
             <button class="btn btn--success btn--sm" onclick="window.deployProject('${p.id}')">🚀 Desplegar</button>
             <a href="/api/projects/${p.id}/export" class="btn btn--primary btn--sm" style="text-decoration: none;">📦 Descargar ZIP</a>
