@@ -76,7 +76,7 @@ export async function generate(projectConfig) {
         providerConfig.options.baseURL = "https://api.moonshot.ai/v1";
       } else if (providerId === 'xiaomi') {
         providerConfig.api = 'openai';
-        providerConfig.options.baseURL = "https://api.xiaomimimo.com/v1";
+        providerConfig.options.baseURL = "https://token-plan-sgp.xiaomimimo.com/v1";
       } else if (providerId === 'minimax') {
         providerConfig.api = 'openai';
         providerConfig.options.baseURL = "https://api.minimax.chat/v1";

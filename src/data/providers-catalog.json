@@ -130,8 +130,8 @@
       "name": "Xiaomi MiMo",
       "description": "API directa de Xiaomi para modelos MiMo",
       "type": "direct",
-      "endpoint": "https://api.xiaomimimo.com/v1",
-      "testEndpoint": "https://api.xiaomimimo.com/v1/models",
+      "endpoint": "https://token-plan-sgp.xiaomimimo.com/v1",
+      "testEndpoint": "https://token-plan-sgp.xiaomimimo.com/v1/models",
       "auth": {
         "method": "api_key",
         "env_key_pattern": "XIAOMI_{N}_API_KEY",
