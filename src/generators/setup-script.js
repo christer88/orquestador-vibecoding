@@ -53,40 +53,81 @@ curl -fsSL https://opencode.ai/install | bash
 echo "📥 Instalando command-code localmente..."
 npm i -g command-code
 
-echo "📥 Inicializando oh-my-opencode..."
-# Asegurarnos de que bun está en PATH para bunx
-export PATH=$PATH:$HOME/.bun/bin
-bunx oh-my-opencode install --no-tui --claude=no --gemini=no --copilot=no --opencode-go=yes
-
-# 5. Configs
-echo "⚙️  Configurando archivos del proyecto..."
+# 5. Copiar configs del proyecto ANTES de instalar oh-my-opencode
+# (Nuestro opencode.json ya incluye "oh-my-openagent" en el plugin array)
+echo "⚙️  Copiando configuración del proyecto..."
 mkdir -p ~/.config/opencode
 rm -f ~/.config/opencode/opencode.json
 cp opencode.json ~/.config/opencode/opencode.json
 cp oh-my-openagent.json ~/.config/opencode/oh-my-openagent.json
+echo "✅ opencode.json con proveedores copiado a ~/.config/opencode/"
 
-# 6. Variables de entorno
+# 6. Variables de entorno — inyectar antes de que oh-my-opencode instale
 if [ -f .env ]; then
   cp .env ~/.config/opencode/.env
   set -a && source .env && set +a
-  echo "✅ Variables de entorno cargadas"
+  echo "✅ Variables de entorno cargadas desde .env"
   
-  # Reemplazar marcadores {env:VAR} con llaves reales localmente para evitar problemas de sesión/PATH
+  # Reemplazar marcadores {env:VAR} con llaves reales directamente en el JSON
+  # para que opencode no dependa de que las variables estén en el entorno
   node -e '
     const fs = require("fs");
     const path = require("path");
     const configFile = path.join(process.env.HOME || "/home/srvdes", ".config/opencode/opencode.json");
     if (fs.existsSync(configFile)) {
       let content = fs.readFileSync(configFile, "utf8");
-      content = content.replace(/\\{env:([A-Za-z0-9_]+)\\}/g, (match, p1) => {
-        return process.env[p1] || match;
+      const replaced = content.replace(/\{env:([A-Za-z0-9_]+)\}/g, (match, p1) => {
+        const val = process.env[p1];
+        if (val) {
+          console.log("  ✔ " + p1 + " → inyectada");
+          return val;
+        }
+        console.warn("  ⚠ " + p1 + " no encontrada en entorno");
+        return match;
       });
-      fs.writeFileSync(configFile, content, "utf8");
-      console.log("✅ Llaves de API inyectadas localmente en opencode.json");
+      fs.writeFileSync(configFile, replaced, "utf8");
+      console.log("✅ Llaves de API inyectadas en ~/.config/opencode/opencode.json");
     }
   '
 else
   echo "⚠️  No se encontró .env — crea uno con tus API keys"
+fi
+
+echo "📥 Inicializando oh-my-opencode (solo instala plugin, no sobreescribe opencode.json)..."
+# Asegurarnos de que bun está en PATH para bunx
+export PATH=$PATH:$HOME/.bun/bin
+# Usamos --skip-opencode si está disponible, si no usamos el normal pero nuestro config ya tiene el plugin
+bunx oh-my-opencode install --no-tui --claude=no --gemini=no --copilot=no --opencode-go=yes 2>&1 || true
+
+# Restaurar nuestro opencode.json con proveedores y plugin ya inyectados por si el installer lo sobreescribió
+if [ -f opencode.json ]; then
+  # Re-inyectar keys si el .env existe (por si el installer volvió a reemplazar el archivo)
+  if [ -f ~/.config/opencode/.env ]; then
+    set -a && source ~/.config/opencode/.env && set +a
+  fi
+  
+  # Verificar si el archivo global tiene nuestros providers; si no, restaurar
+  if ! grep -q "opencode-go-1" ~/.config/opencode/opencode.json 2>/dev/null; then
+    echo "⚠️  El installer sobreescribió opencode.json — restaurando configuración de proveedores..."
+    cp opencode.json ~/.config/opencode/opencode.json
+    
+    # Volver a inyectar keys
+    node -e '
+      const fs = require("fs");
+      const path = require("path");
+      const configFile = path.join(process.env.HOME || "/home/srvdes", ".config/opencode/opencode.json");
+      if (fs.existsSync(configFile)) {
+        let content = fs.readFileSync(configFile, "utf8");
+        const replaced = content.replace(/\{env:([A-Za-z0-9_]+)\}/g, (match, p1) => {
+          return process.env[p1] || match;
+        });
+        fs.writeFileSync(configFile, replaced, "utf8");
+        console.log("✅ Proveedores y keys restaurados correctamente.");
+      }
+    '
+  else
+    echo "✅ opencode.json de proveedores intacto tras instalación."
+  fi
 fi
 
 # 7. Auth (se omiten comandos interactivos bloqueantes en despliegue automático, pero se listan para el usuario)

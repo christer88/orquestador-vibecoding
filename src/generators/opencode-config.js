@@ -44,8 +44,9 @@ const PROVIDER_MODELS = {
 
 export async function generate(projectConfig) {
   const config = {
-    plugin: [],
     $schema: "https://opencode.ai/config.json",
+    // Plugin de agentes Oh My OpenAgent — necesario para cargar agentes y herramientas
+    plugin: ["oh-my-openagent"],
     model: "deepseek-v4-flash", // Modelo default barato
     provider: {},
     theme: "opencode",
