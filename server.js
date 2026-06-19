@@ -189,18 +189,29 @@ async function resolverProyecto(proyecto) {
   // Reemplazar en agents
   if (resuelto.agents) {
     for (const [agentId, agentConfig] of Object.entries(resuelto.agents)) {
-      const src = agentConfig.source;
-      if (placeholderMap[src]) {
-        agentConfig.source = placeholderMap[src];
-      } else {
-        // Encontrar la cuenta registrada con ese UUID por si el proyecto fue guardado con UUIDs en el source
+      const resolveSrc = (src) => {
+        if (!src) return src;
+        if (placeholderMap[src]) return placeholderMap[src];
         const regAcc = registeredAccounts.find(a => a.id === src);
         if (regAcc) {
           const activeRegs = registeredAccounts.filter(a => a.provider === regAcc.provider && a.active !== false);
           const activeIdx = activeRegs.findIndex(a => a.id === regAcc.id);
           const idxToUse = activeIdx !== -1 ? activeIdx : 0;
-          agentConfig.source = `${regAcc.provider}-${idxToUse + 1}`;
+          return `${regAcc.provider}-${idxToUse + 1}`;
         }
+        return src;
+      };
+
+      agentConfig.source = resolveSrc(agentConfig.source);
+
+      // También resolver los sources dentro de los fallbacks (si están en el nuevo formato objeto)
+      if (agentConfig.fallbacks && Array.isArray(agentConfig.fallbacks)) {
+        agentConfig.fallbacks = agentConfig.fallbacks.map(fb => {
+          if (typeof fb === 'object' && fb.source) {
+            return { ...fb, source: resolveSrc(fb.source) };
+          }
+          return fb;
+        });
       }
     }
   }
@@ -582,6 +593,105 @@ app.get('/api/projects/:id/deploy/status', asyncHandler(async (req, res) => {
   });
 }));
 
+/**
+ * POST /api/projects/:id/update — Actualizar configuración de un proyecto sin reinstalar dependencias
+ */
+app.post('/api/projects/:id/update', asyncHandler(async (req, res) => {
+  const proyecto = await leerJSON(path.join(DIRS.projects, `${req.params.id}.json`));
+
+  if (!proyecto) {
+    return res.status(404).json({ ok: false, error: `Proyecto '${req.params.id}' no encontrado` });
+  }
+
+  // Generar todos los archivos
+  const generados = await ejecutarGeneradores(proyecto);
+  if (generados._error) {
+    return res.status(500).json({ ok: false, error: generados._error });
+  }
+
+  // Determinar ruta de destino
+  const nombreCarpeta = `proyecto-${proyecto.name.replace(/\\s+/g, '-').toLowerCase()}`;
+  const targetDir = (req.body && req.body.targetDir) || path.join(__dirname, nombreCarpeta);
+
+  // Asegurar que el directorio de destino existe
+  await fs.mkdir(targetDir, { recursive: true });
+
+  // Escribir los archivos generados
+  for (const [nombre, contenido] of Object.entries(generados)) {
+    if (nombre.startsWith('_')) continue;
+    const rutaArchivo = path.join(targetDir, nombre);
+    const contenidoStr = typeof contenido === 'string' ? contenido : JSON.stringify(contenido, null, 2);
+    await fs.writeFile(rutaArchivo, contenidoStr, 'utf-8');
+  }
+
+  // ─── Inyectar keys reales en opencode.json del proyecto ───────────────────
+  try {
+    const envFilePath = path.join(targetDir, '.env');
+    const opencodeJsonPath = path.join(targetDir, 'opencode.json');
+    
+    // Parsear las variables del .env generado
+    let envVars = {};
+    try {
+      const envContent = await fs.readFile(envFilePath, 'utf-8');
+      for (const line of envContent.split('\\n')) {
+        const trimmed = line.trim();
+        if (trimmed && !trimmed.startsWith('#')) {
+          const eqIdx = trimmed.indexOf('=');
+          if (eqIdx !== -1) {
+            const k = trimmed.slice(0, eqIdx).trim();
+            const v = trimmed.slice(eqIdx + 1).trim();
+            envVars[k] = v;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("No se encontró .env o error al leerlo durante update", e.message);
+    }
+    
+    try {
+      let opencodeContent = await fs.readFile(opencodeJsonPath, 'utf-8');
+      let injectedCount = 0;
+      opencodeContent = opencodeContent.replace(/\\{env:([A-Za-z0-9_]+)\\}/g, (match, varName) => {
+        const val = envVars[varName] || process.env[varName];
+        if (val) {
+          injectedCount++;
+          return val;
+        }
+        return match;
+      });
+      await fs.writeFile(opencodeJsonPath, opencodeContent, 'utf-8');
+      console.log(`✅ Update: ${injectedCount} API keys inyectadas en opencode.json del proyecto`);
+    } catch (e) {
+      console.warn("No se encontró opencode.json durante update", e.message);
+    }
+
+    const globalOpencodePath = path.join(process.env.HOME || '/home/srvdes', '.config', 'opencode', 'opencode.json');
+    try {
+      let globalContent = await fs.readFile(globalOpencodePath, 'utf-8');
+      globalContent = globalContent.replace(/\\{env:([A-Za-z0-9_]+)\\}/g, (match, varName) => {
+        const val = envVars[varName] || process.env[varName];
+        return val || match;
+      });
+      await fs.writeFile(globalOpencodePath, globalContent, 'utf-8');
+      console.log(`✅ Update: opencode.json global actualizado con keys del proyecto`);
+    } catch (ge) {
+      console.warn(`⚠️ No se pudo actualizar opencode.json global: ${ge.message}`);
+    }
+  } catch (envErr) {
+    console.warn(`⚠️ Error inyectando keys: ${envErr.message}`);
+  }
+  // ──────────────────────────────────────────────────────────────────────────
+
+  // Guardar proyecto.json original en el destino
+  await escribirJSON(path.join(targetDir, 'project.json'), proyecto);
+
+  res.json({
+    ok: true,
+    message: 'Archivos de configuración actualizados con éxito',
+    targetDir
+  });
+}));
+
 // ═══════════════════════════════════════════════════════════════
 // RUTAS: DATOS (/api/providers, /api/models, /api/agents, /api/templates)
 // ═══════════════════════════════════════════════════════════════
@@ -595,11 +705,137 @@ app.get('/api/providers', asyncHandler(async (req, res) => {
 }));
 
 /**
+ * POST /api/providers/custom — Añadir proveedor personalizado
+ */
+app.post('/api/providers/custom', asyncHandler(async (req, res) => {
+  const { name, endpoint, models } = req.body;
+  if (!name || !endpoint) {
+    return res.status(400).json({ ok: false, error: 'Faltan campos requeridos (name, endpoint)' });
+  }
+
+  const providerId = `custom-${name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
+  const envKey = `${providerId.toUpperCase().replace(/-/g, '_')}_{N}_API_KEY`;
+
+  const providersPath = path.join(DIRS.data, 'providers-catalog.json');
+  const providersData = await leerJSON(providersPath);
+  if (!providersData || !providersData.providers) {
+    return res.status(500).json({ ok: false, error: 'Error cargando catálogo de proveedores' });
+  }
+
+  if (providersData.providers.find(p => p.id === providerId)) {
+    return res.status(400).json({ ok: false, error: 'El proveedor ya existe' });
+  }
+
+  const newModels = (models || '').split(',').map(m => m.trim()).filter(m => m);
+
+  providersData.providers.push({
+    id: providerId,
+    name: name,
+    description: "Proveedor personalizado añadido manualmente",
+    type: "api",
+    endpoint: endpoint,
+    testEndpoint: `${endpoint}/models`,
+    auth: {
+      method: "env_variable",
+      env_key_pattern: envKey,
+      auth_type: "bearer_token"
+    },
+    multi_account: true,
+    max_accounts: 5,
+    supported_models: newModels,
+    custom: true
+  });
+
+  await escribirJSON(providersPath, providersData);
+
+  const modelsPath = path.join(DIRS.data, 'models-catalog.json');
+  const modelsData = await leerJSON(modelsPath);
+  if (modelsData && modelsData.models) {
+    for (const modelName of newModels) {
+      const modelExists = modelsData.models.find(m => m.id === modelName);
+      if (modelExists) {
+        if (!modelExists.available_sources.includes(providerId)) {
+          modelExists.available_sources.push(providerId);
+        }
+      } else {
+        modelsData.models.push({
+          id: modelName,
+          name: modelName,
+          provider_origin: providerId,
+          tier: 2,
+          available_sources: [providerId],
+          context_window: 32768,
+          custom: true
+        });
+      }
+    }
+    await escribirJSON(modelsPath, modelsData);
+  }
+
+  res.status(201).json({ ok: true, provider: providerId });
+}));
+
+/**
  * GET /api/models — Catálogo de modelos
  */
 app.get('/api/models', asyncHandler(async (req, res) => {
   const datos = await cargarCatalogo('models-catalog');
   res.json({ ok: true, models: datos });
+}));
+
+/**
+ * POST /api/models/sync-free — Detectar modelos gratuitos
+ */
+app.post('/api/models/sync-free', asyncHandler(async (req, res) => {
+  const modelsPath = path.join(DIRS.data, 'models-catalog.json');
+  const modelsData = await leerJSON(modelsPath);
+  if (!modelsData || !modelsData.models) {
+    return res.status(500).json({ ok: false, error: 'Catálogo de modelos no disponible' });
+  }
+
+  let freeModelIds = [];
+  let freeOpenRouterBaseIds = [];
+
+  try {
+    const orRes = await fetch('https://openrouter.ai/api/v1/models');
+    if (orRes.ok) {
+      const orData = await orRes.json();
+      const orFree = orData.data.filter(m => m.pricing.prompt === '0' && m.pricing.completion === '0');
+      freeModelIds = freeModelIds.concat(orFree.map(m => m.id));
+      freeOpenRouterBaseIds = orFree.map(m => m.id.replace(':free', ''));
+    }
+  } catch (e) {
+    console.error('Error fetching OpenRouter models:', e);
+  }
+
+  try {
+    const nvRes = await fetch('https://integrate.api.nvidia.com/v1/models');
+    if (nvRes.ok) {
+      const nvData = await nvRes.json();
+      freeModelIds = freeModelIds.concat(nvData.data.map(m => m.id));
+    }
+  } catch (e) {
+    console.error('Error fetching NVIDIA models:', e);
+  }
+
+  let totalFreeModels = 0;
+  modelsData.models = modelsData.models.map(m => {
+    const isNvidia = m.provider_origin === 'nvidia' || (m.available_sources && m.available_sources.includes('nvidia'));
+    const isLocalFree = m.pricing && m.pricing.input_per_million === 0 && m.pricing.output_per_million === 0;
+    
+    const isOpenRouterFree = freeModelIds.includes(m.openrouter_id) || freeOpenRouterBaseIds.includes(m.openrouter_id);
+
+    const isActuallyFree = freeModelIds.includes(m.id) || isOpenRouterFree || isNvidia || isLocalFree;
+    
+    m.is_free = !!isActuallyFree;
+    if (m.is_free) {
+      totalFreeModels++;
+    }
+    return m;
+  });
+
+  await escribirJSON(modelsPath, modelsData);
+  res.json({ ok: true, message: `Sincronización completada. Se detectaron ${totalFreeModels} modelos gratuitos reales (basado en OpenRouter, NVIDIA y catálogo) y se marcaron con la etiqueta.` });
 }));
 
 /**

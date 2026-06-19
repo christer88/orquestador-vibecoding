@@ -69,7 +69,9 @@ Una vez que el servidor esté corriendo, abre tu navegador y visita `http://loca
     *   Asigna un nombre a tu proyecto.
     *   Selecciona las fuentes/cuentas activas y asigna qué modelo y proveedor ejecutará cada uno de los 11 agentes de Oh My OpenAgent.
     *   Configura la cadena de fallbacks (orden de respaldo si una cuenta o proveedor falla).
-4.  **Generar & Descargar**: En la tarjeta de tu proyecto presiona **"Descargar ZIP"**.
+7.  **Desplegar Proyecto**: Con el botón **"🚀 Desplegar"** puedes instalar y configurar el proyecto directamente en una carpeta local de la máquina virtual (crea la carpeta, inyecta credenciales y ejecuta el script de instalación en segundo plano).
+8.  **Actualizar Configuración**: Con el botón **"🔄 Actualizar"** puedes aplicar de forma inmediata y silenciosa cualquier cambio de configuración (ej. cambio de modelo, proveedor o permisos de `hashline_edit` para que los agentes delegados apliquen cambios) directamente a la carpeta de tu proyecto sin necesidad de reinstalar dependencias.
+9.  **Generar & Descargar**: En la tarjeta de tu proyecto también puedes presionar **"📦 Descargar ZIP"** si prefieres llevarte los archivos a otra máquina.
 
 ### ¿Qué contiene el archivo ZIP del proyecto?
 *   `oh-my-openagent.json`: Reglas de ruteo y conmutación de agentes.

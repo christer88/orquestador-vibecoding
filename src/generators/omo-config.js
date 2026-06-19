@@ -10,6 +10,7 @@ export async function generate(projectConfig) {
       timeout_seconds: 30,
       notify_on_fallback: true
     },
+    hashline_edit: true,
     agents: {},
     categories: {},
     background_task: projectConfig.background_task || {
@@ -20,9 +21,16 @@ export async function generate(projectConfig) {
 
   // Populate agents
   for (const [agentId, agentConfig] of Object.entries(projectConfig.agents || {})) {
+    const fallbacks = (agentConfig.fallbacks || []).map(fb => {
+      if (typeof fb === 'object' && fb.source && fb.model) {
+        return `${fb.source}/${fb.model}`;
+      }
+      return fb; // Si ya es un string
+    });
+
     omo.agents[agentId] = {
       model: `${agentConfig.source}/${agentConfig.model}`,
-      fallback_models: agentConfig.fallbacks || []
+      fallback_models: fallbacks
     };
     
     // Si tiene prompt custom (para agentes personalizados)

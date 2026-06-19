@@ -45,6 +45,7 @@ export default {
           <div class="card__actions" style="display: flex; gap: var(--space-3); margin-top: auto; padding-top: var(--space-4); border-top: 1px solid var(--border); justify-content: flex-end; align-items: center; flex-wrap: nowrap; overflow: visible;">
             <button class="btn btn--secondary btn--sm" onclick="window.location.hash='#wizard?id=${p.id}'">✏️ Editar</button>
             <button class="btn btn--success btn--sm" onclick="window.deployProject('${p.id}')">🚀 Desplegar</button>
+            <button class="btn btn--info btn--sm" onclick="window.updateProject('${p.id}')">🔄 Actualizar</button>
             <a href="/api/projects/${p.id}/export" class="btn btn--primary btn--sm" style="text-decoration: none;">📦 Descargar ZIP</a>
           </div>
         </div>
@@ -125,5 +126,44 @@ window.deployProject = async function(id) {
   } catch (e) {
     document.getElementById('deploy-message').innerText = `❌ Error de red: ${e.message}`;
     document.getElementById('deploy-logs').style.color = '#f92672';
+  }
+};
+
+window.updateProject = async function(id) {
+  const backdrop = document.createElement('div');
+  backdrop.className = 'modal-backdrop';
+  backdrop.innerHTML = `
+    <div class="modal" style="max-width: 500px;">
+      <div class="modal__header">
+        <h3 class="modal__title">🔄 Actualizando Proyecto</h3>
+        <button class="modal__close" onclick="this.closest('.modal-backdrop').remove()">&times;</button>
+      </div>
+      <div class="modal__body" style="padding: var(--space-6) var(--space-4);">
+        <div id="update-message" class="text-info" style="display: flex; align-items: center; gap: 8px;">
+          <span class="loading-spinner"></span> Actualizando configuraciones...
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--secondary" onclick="this.closest('.modal-backdrop').remove()">Cerrar</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(backdrop);
+
+  try {
+    const res = await fetch(`/api/projects/${id}/update`, { method: 'POST' });
+    const data = await res.json();
+    if (!data.ok) {
+      document.getElementById('update-message').innerHTML = `❌ Error: ${data.error}`;
+      return;
+    }
+
+    document.getElementById('update-message').innerHTML = `
+      <span class="badge badge--success">Completado ✨</span> 
+      <br><br>
+      Configuración actualizada en: <code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;">${data.targetDir}</code>
+    `;
+  } catch (e) {
+    document.getElementById('update-message').innerHTML = `❌ Error de red: ${e.message}`;
   }
 };

@@ -1,3 +1,30 @@
+window.addFallbackRow = function(agentId, model = '', source = '') {
+  const container = document.getElementById(`fallbacks-${agentId}`);
+  if (!container) return;
+  const row = document.createElement('div');
+  row.className = 'fallback-row';
+  row.style.cssText = 'display: grid; grid-template-columns: 1.5fr 1fr auto; gap: 8px; align-items: center; background: rgba(0,0,0,0.1); padding: 4px; border-radius: 4px; border-left: 2px solid var(--primary-start);';
+  
+  // Clone the model and source selects from the first agent row to get the options
+  const modelOptions = document.querySelector('.agent-model').innerHTML;
+  const sourceOptions = document.querySelector('.agent-source').innerHTML;
+
+  row.innerHTML = `
+    <select class="form-select fallback-model" style="padding: 2px 8px; font-size: 11px;">
+      ${modelOptions}
+    </select>
+    <select class="form-select fallback-source" style="padding: 2px 8px; font-size: 11px;">
+      ${sourceOptions}
+    </select>
+    <button type="button" onclick="this.parentElement.remove()" style="background: none; border: none; color: #f92672; cursor: pointer; padding: 0 4px; font-size: 14px;" title="Eliminar respaldo">✖</button>
+  `;
+  
+  if (model) row.querySelector('.fallback-model').value = model;
+  if (source) row.querySelector('.fallback-source').value = source;
+  
+  container.appendChild(row);
+};
+
 export default {
   templates: [],
   providers: [],
@@ -141,12 +168,14 @@ export default {
           <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 8px;">
             <select class="form-select agent-model" data-agent="${a.id}" style="padding: 4px var(--space-2); font-size: 12px;">
               <option value="">(Desactivado / No usar)</option>
-              ${this.models.map(m => `<option value="${m.id}">${m.name}</option>`).join('')}
+              ${this.models.map(m => `<option value="${m.id}">${m.is_free ? '[🎁 FREE] ' : ''}${m.name}</option>`).join('')}
             </select>
             <select class="form-select agent-source" data-agent="${a.id}" style="padding: 4px var(--space-2); font-size: 12px;">
               ${sourceOptionsHtml}
             </select>
           </div>
+          <div class="fallbacks-container" id="fallbacks-${a.id}" style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px;"></div>
+          <button type="button" class="btn btn--sm" style="margin-top: 4px; background: transparent; border: 1px dashed var(--border); color: var(--text-secondary); width: 100%; text-align: left; padding: 2px 8px; font-size: 11px;" onclick="window.addFallbackRow('${a.id}')">➕ Añadir Respaldo</button>
         </div>
       `).join('');
 
@@ -238,9 +267,25 @@ export default {
           const agentName = modelSelect.getAttribute('data-agent');
           
           const agentConfig = t.agents?.[agentName];
+          const fallbacksContainer = document.getElementById(`fallbacks-${agentName}`);
+          if (fallbacksContainer) fallbacksContainer.innerHTML = '';
+
           if (agentConfig) {
             modelSelect.value = agentConfig.model || '';
             sourceSelect.value = agentConfig.source || '';
+            
+            if (agentConfig.fallbacks && Array.isArray(agentConfig.fallbacks)) {
+              agentConfig.fallbacks.forEach(fb => {
+                if (typeof fb === 'object') {
+                  window.addFallbackRow(agentName, fb.model, fb.source);
+                } else if (typeof fb === 'string') {
+                  const parts = fb.split('/');
+                  if (parts.length >= 2) {
+                    window.addFallbackRow(agentName, parts.slice(1).join('/'), parts[0]);
+                  }
+                }
+              });
+            }
           } else {
             modelSelect.value = ''; // Desactivado
           }
@@ -281,10 +326,20 @@ export default {
         const agentName = modelSelect.getAttribute('data-agent');
         
         if (modelSelect.value) {
+          const fallbacks = [];
+          const fbRows = row.querySelectorAll('.fallback-row');
+          fbRows.forEach(fbRow => {
+            const fbModel = fbRow.querySelector('.fallback-model').value;
+            const fbSource = fbRow.querySelector('.fallback-source').value;
+            if (fbModel && fbSource) {
+              fallbacks.push({ model: fbModel, source: fbSource });
+            }
+          });
+
           agents[agentName] = {
             model: modelSelect.value,
             source: sourceSelect.value,
-            fallbacks: []
+            fallbacks: fallbacks
           };
         }
       });

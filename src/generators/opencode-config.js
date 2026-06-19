@@ -47,6 +47,13 @@ const PROVIDER_MODELS = {
     'qwen3.7-plus': 'Qwen 3.7 Plus',
     'mimo-v2.5-pro': 'MiMo V2.5 Pro',
     'minimax-m3': 'MiniMax M3'
+  },
+  'nvidia': {
+    'nvidia/nemotron-3-super-120b-a12b': 'Nemotron-3 Super 120B',
+    'nvidia/nemotron-3-ultra-550b-a55b': 'Nemotron-3 Ultra 550B',
+    'nvidia/nemotron-3-nano-30b-a3b': 'Nemotron-3 Nano 30B',
+    'nvidia/llama-3.1-nemotron-nano-vl-8b-v1': 'Llama 3.1 Nemotron Nano VL 8B',
+    'z-ai/glm-5.1': 'Z.ai GLM-5.1'
   }
 };
 
@@ -97,6 +104,12 @@ export async function generate(projectConfig) {
       } else if (providerId === 'opencode-go') {
         providerConfig.api = 'openai';
         providerConfig.options.baseURL = "https://opencode.ai/zen/go/v1";
+      } else if (providerId === 'nvidia') {
+        providerConfig.api = 'openai';
+        providerConfig.options.baseURL = "https://integrate.api.nvidia.com/v1";
+      } else if (providerId.startsWith('custom-')) {
+        // Fallback dinámico si se requiere
+        providerConfig.api = 'openai';
       }
       
       if (projectConfig.cacheOptimization) {

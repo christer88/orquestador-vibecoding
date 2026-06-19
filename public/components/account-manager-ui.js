@@ -5,17 +5,21 @@ export default {
   render(container) {
     container.innerHTML = `
       <div class="account-manager-view" style="max-width: var(--content-max-width); margin: 0 auto;">
-        <div class="main-content__header" style="margin-bottom: var(--space-6);">
+        <div class="main-content__header" style="margin-bottom: var(--space-6); display: flex; justify-content: space-between; align-items: center;">
           <div>
             <h2 class="main-content__title">🔑 Gestión de Cuentas y API Keys</h2>
             <p class="main-content__subtitle">Registra tus cuentas para cada proveedor y asocia sus variables de entorno.</p>
           </div>
+          <button class="btn btn--secondary" onclick="window.appAccountManager.syncFreeModels()">🎁 Sincronizar Modelos Gratuitos</button>
         </div>
 
         <div class="grid" style="display: grid; grid-template-columns: 1fr 1.5fr; gap: var(--space-6);">
           <!-- Formulario Agregar -->
           <div class="card">
-            <h3 style="margin-bottom: var(--space-4); border-bottom: 1px solid var(--border); padding-bottom: var(--space-2);">Registrar Cuenta</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: var(--space-2); margin-bottom: var(--space-4);">
+              <h3 style="margin: 0;">Registrar Cuenta</h3>
+              <button class="btn btn--secondary btn--sm" onclick="window.appAccountManager.showCustomProviderModal()">➕ Añadir Proveedor</button>
+            </div>
             <form id="account-form" onsubmit="event.preventDefault(); window.appAccountManager.saveAccount();">
               <div class="form-group" style="margin-bottom: var(--space-4);">
                 <label class="form-label form-label--required">Proveedor</label>
@@ -59,6 +63,31 @@ export default {
               <div class="loading">Cargando cuentas...</div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Modal Proveedor Personalizado -->
+      <div id="custom-provider-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; backdrop-filter: blur(2px);">
+        <div class="card" style="width: 100%; max-width: 500px; background: var(--bg-surface); box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid var(--border);">
+          <h3 style="margin-top: 0; margin-bottom: var(--space-4); color: var(--primary-start);">Nuevo Proveedor</h3>
+          <form id="custom-provider-form" onsubmit="event.preventDefault(); window.appAccountManager.saveCustomProvider();">
+            <div class="form-group" style="margin-bottom: var(--space-4);">
+              <label class="form-label form-label--required">Nombre del Proveedor</label>
+              <input type="text" id="cp-name" class="form-input" placeholder="Ej: SiliconFlow" required>
+            </div>
+            <div class="form-group" style="margin-bottom: var(--space-4);">
+              <label class="form-label form-label--required">URL del Endpoint (Base)</label>
+              <input type="url" id="cp-endpoint" class="form-input" placeholder="Ej: https://api.siliconflow.cn/v1" required>
+            </div>
+            <div class="form-group" style="margin-bottom: var(--space-4);">
+              <label class="form-label form-label--required">Modelos Soportados</label>
+              <textarea id="cp-models" class="form-input" placeholder="Separados por comas. Ej: deepseek-chat, Qwen/Qwen2-72B-Instruct" required style="min-height: 80px; resize: vertical;"></textarea>
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: var(--space-6);">
+              <button type="button" class="btn btn--secondary" onclick="document.getElementById('custom-provider-modal').style.display = 'none'">Cancelar</button>
+              <button type="submit" class="btn btn--primary">Guardar Proveedor</button>
+            </div>
+          </form>
         </div>
       </div>
     `;
@@ -227,6 +256,53 @@ export default {
     } finally {
       button.textContent = originalText;
       button.disabled = false;
+    }
+  },
+
+  showCustomProviderModal() {
+    document.getElementById('custom-provider-modal').style.display = 'flex';
+  },
+
+  async saveCustomProvider() {
+    try {
+      const data = {
+        name: document.getElementById('cp-name').value.trim(),
+        endpoint: document.getElementById('cp-endpoint').value.trim(),
+        models: document.getElementById('cp-models').value.trim()
+      };
+
+      const res = await fetch('/api/providers/custom', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const resData = await res.json();
+      if (resData.ok) {
+        alert('Proveedor agregado exitosamente.');
+        document.getElementById('custom-provider-modal').style.display = 'none';
+        document.getElementById('custom-provider-form').reset();
+        await this.loadProviders();
+      } else {
+        alert('Error: ' + resData.error);
+      }
+    } catch (e) {
+      alert('Error de red: ' + e.message);
+    }
+  },
+
+  async syncFreeModels() {
+    if (!confirm('¿Escanear proveedores (OpenRouter, NVIDIA, etc.) para autodetectar modelos gratuitos?')) return;
+    try {
+      const res = await fetch('/api/models/sync-free', { method: 'POST' });
+      const data = await res.json();
+      if (data.ok) {
+        alert(data.message);
+      } else {
+        alert('Error: ' + data.error);
+      }
+    } catch (e) {
+      alert('Error de red: ' + e.message);
     }
   }
 }

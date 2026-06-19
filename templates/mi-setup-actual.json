@@ -42,7 +42,12 @@
     "hephaestus": {
       "model": "deepseek-v4-pro",
       "source": "5922668d-5270-4d8b-aa35-7ced4104145a",
-      "fallbacks": []
+      "fallbacks": [
+        {
+          "model": "deepseek-v4-pro",
+          "source": "33e1cf4a-5b9a-4f9f-abce-31136660e9a5"
+        }
+      ]
     },
     "oracle": {
       "model": "kimi-k2.6",
