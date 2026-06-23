@@ -1378,6 +1378,92 @@ app.delete('/api/custom-agents/:id', asyncHandler(async (req, res) => {
 }));
 
 // ═══════════════════════════════════════════════════════════════
+// RESPALDO Y RESTAURACIÓN
+// ═══════════════════════════════════════════════════════════════
+
+app.get('/api/backup/export', asyncHandler(async (req, res) => {
+  const zipName = `respaldo-orquestador-${Date.now()}.zip`;
+  res.attachment(zipName);
+
+  const archive = archiver('zip', { zlib: { level: 9 } });
+  archive.on('error', (err) => { throw err; });
+  archive.pipe(res);
+
+  const accountsPath = path.join(DIRS.data, 'accounts.json');
+  try {
+    await fs.access(accountsPath);
+    archive.file(accountsPath, { name: 'accounts.json' });
+  } catch (e) { /* ignorar */ }
+
+  const envPath = path.join(__dirname, '.env');
+  try {
+    await fs.access(envPath);
+    archive.file(envPath, { name: '.env' });
+  } catch (e) { /* ignorar */ }
+
+  try {
+    await fs.access(DIRS.templates);
+    archive.directory(DIRS.templates, 'templates');
+  } catch (e) { /* ignorar */ }
+
+  await archive.finalize();
+}));
+
+const upload = multer({ dest: path.join(__dirname, 'temp_uploads') });
+
+app.post('/api/backup/import', upload.single('backup'), asyncHandler(async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No se subió ningún archivo' });
+  }
+
+  const zipPath = req.file.path;
+  const extractDir = path.join(__dirname, `temp_extract_${Date.now()}`);
+
+  try {
+    await fs.mkdir(extractDir, { recursive: true });
+    
+    await new Promise((resolve, reject) => {
+      createReadStream(zipPath)
+        .pipe(unzipper.Extract({ path: extractDir }))
+        .on('close', resolve)
+        .on('error', reject);
+    });
+
+    const files = await fs.readdir(extractDir);
+    for (const file of files) {
+      const srcPath = path.join(extractDir, file);
+      if (file === 'accounts.json') {
+        await asegurarDirectorio(DIRS.data);
+        await fs.copyFile(srcPath, path.join(DIRS.data, 'accounts.json'));
+      } else if (file === '.env') {
+        await fs.copyFile(srcPath, path.join(__dirname, '.env'));
+      } else if (file === 'templates') {
+        const templatesFiles = await fs.readdir(srcPath);
+        await asegurarDirectorio(DIRS.templates);
+        for (const tFile of templatesFiles) {
+          await fs.copyFile(path.join(srcPath, tFile), path.join(DIRS.templates, tFile));
+        }
+      }
+    }
+
+    await fs.rm(extractDir, { recursive: true, force: true });
+    await fs.rm(zipPath, { force: true });
+
+    res.json({ ok: true, message: 'Respaldo importado y restaurado correctamente.' });
+    
+    // Intentar reiniciar PM2 en segundo plano
+    import('child_process').then(({ exec }) => {
+      exec('npx pm2 restart orquestador --update-env', { cwd: __dirname });
+    }).catch(() => {});
+
+  } catch (error) {
+    await fs.rm(extractDir, { recursive: true, force: true }).catch(() => {});
+    await fs.rm(zipPath, { force: true }).catch(() => {});
+    throw error;
+  }
+}));
+
+// ═══════════════════════════════════════════════════════════════
 // MIDDLEWARE DE ERRORES GLOBAL
 // ═══════════════════════════════════════════════════════════════
 
