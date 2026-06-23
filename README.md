@@ -129,3 +129,24 @@ Para desplegar la configuración en la carpeta de trabajo de tu nuevo entorno:
     ```bash
     bunx oh-my-opencode
     ```
+
+---
+
+## 4. Actualizar el Orquestador
+
+Si ya tienes el sistema instalado y he subido nuevas versiones a tu repositorio de GitHub (nuevas plantillas, modelos o funcionalidades como la migración de backups), puedes actualizar tu servidor en cualquier momento sin perder tus cuentas, proyectos ni configuraciones privadas:
+
+```bash
+# 1. Ingresa a la carpeta del orquestador
+cd ~/orquestador-vibecoding
+
+# 2. Descarga los últimos cambios del código fuente desde GitHub
+git pull origin main
+
+# 3. Instala posibles dependencias nuevas de Node (como multer, unzipper, etc.)
+npm install
+
+# 4. Reinicia el sistema limpiamente
+npx pm2 restart orquestador --update-env
+```
+Tus archivos `.env` y de base de datos (`accounts.json`) no se verán afectados, ya que están estrictamente protegidos por el `.gitignore`.
