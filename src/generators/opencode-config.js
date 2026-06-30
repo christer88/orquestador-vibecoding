@@ -12,6 +12,7 @@ const PROVIDER_MODELS = {
     'mimo-v2-omni': 'MiMo-V2 Omni',
     'mimo-v2.5': 'MiMo V2.5',
     'mimo-v2.5-pro': 'MiMo-V2.5 Pro',
+    'mimo-v2.5-pro-ultraspeed': 'MiMo V2.5 Pro Ultraspeed',
     'minimax-m2.5': 'MiniMax M2.5',
     'minimax-m2.7': 'MiniMax M2.7',
     'minimax-m3': 'MiniMax M3'
@@ -25,6 +26,7 @@ const PROVIDER_MODELS = {
     'qwen3.5-plus': 'Qwen 3.5 Plus',
     'mimo-v2-omni': 'MiMo-V2 Omni',
     'mimo-v2.5-pro': 'MiMo-V2.5 Pro',
+    'mimo-v2.5-pro-ultraspeed': 'MiMo V2.5 Pro Ultraspeed',
     'mimo-v2-flash': 'MiMo-V2 Flash',
     'minimax-m3': 'MiniMax M3'
   },
@@ -38,6 +40,7 @@ const PROVIDER_MODELS = {
   'xiaomi': {
     'mimo-v2-omni': 'MiMo-V2 Omni',
     'mimo-v2.5-pro': 'MiMo-V2.5 Pro',
+    'mimo-v2.5-pro-ultraspeed': 'MiMo V2.5 Pro Ultraspeed',
     'mimo-v2-flash': 'MiMo-V2 Flash'
   },
   'minimax': {
@@ -189,6 +192,7 @@ export async function generate(projectConfig) {
           else if (modelId === 'qwen3.5-plus') realModelId = 'qwen/qwen3.5-plus';
           else if (modelId === 'mimo-v2-omni') realModelId = 'xiaomi/mimo-v2-omni';
           else if (modelId === 'mimo-v2.5-pro') realModelId = 'xiaomi/mimo-v2.5-pro';
+          else if (modelId === 'mimo-v2.5-pro-ultraspeed') realModelId = 'xiaomi/mimo-v2.5-pro-ultraspeed';
           else if (modelId === 'mimo-v2-flash') realModelId = 'xiaomi/mimo-v2-flash';
           else if (modelId === 'minimax-m3') realModelId = 'minimax/minimax-m3';
         }
