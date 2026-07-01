@@ -5,7 +5,7 @@ import { getAccounts } from './account-manager.js';
  * Construye cadenas de fallback multi-proveedor y multi-cuenta.
  */
 
-export function buildFallbackChain(agentId, primaryModel, primarySource, accounts, strategy = 'on-error') {
+export function buildFallbackChain(agentId, primaryModel, primarySource, accounts, activeProviders = []) {
   const fallbacks = [];
   
   // Encontrar la cuenta principal seleccionada
@@ -28,8 +28,8 @@ export function buildFallbackChain(agentId, primaryModel, primarySource, account
     }
   }
   
-  // Agregar OpenRouter como safety net si está disponible
-  if (accounts['openrouter'] && accounts['openrouter'].length > 0) {
+  // Agregar OpenRouter como safety net si está disponible en la lista de proveedores activos
+  if (activeProviders.includes('openrouter') && accounts['openrouter'] && accounts['openrouter'].length > 0) {
     const openRouterAccId = accounts['openrouter'][0].id;
     if (openRouterAccId !== primarySource) {
       fallbacks.push(`${openRouterAccId}/${primaryModel}`);
@@ -48,7 +48,8 @@ export function autoGenerateFallbacks(config) {
         agentId, 
         agentConfig.model, 
         agentConfig.source, 
-        config.accounts
+        config.accounts,
+        config.providers || []
       );
     }
   }
