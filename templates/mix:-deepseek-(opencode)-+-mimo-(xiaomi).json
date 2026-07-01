@@ -1,0 +1,113 @@
+{
+  "name": "Mix: DeepSeek (OpenCode) + MiMo (Xiaomi)",
+  "description": "Combina DeepSeek V4 Pro/Flash de OpenCode Go y MiMo Pro/Omni de Xiaomi.",
+  "providers": [
+    "opencode-go",
+    "xiaomi"
+  ],
+  "accounts": {
+    "opencode-go": [
+      {
+        "id": "opencode-go-1",
+        "label": "Cuenta Principal"
+      }
+    ],
+    "xiaomi": [
+      {
+        "id": "xiaomi-1",
+        "label": "Cuenta Principal"
+      }
+    ],
+    "openrouter": [
+      {
+        "id": "openrouter-1",
+        "label": "OpenRouter"
+      }
+    ],
+    "cavoti": [
+      {
+        "id": "cavoti-1",
+        "label": "Cavoti GPT"
+      }
+    ]
+  },
+  "agents": {
+    "sisyphus": {
+      "model": "deepseek-v4-pro",
+      "source": "opencode-go-1",
+      "fallbacks": []
+    },
+    "hephaestus": {
+      "model": "mimo-v2.5-pro",
+      "source": "xiaomi-1",
+      "fallbacks": []
+    },
+    "oracle": {
+      "model": "deepseek-v4-flash",
+      "source": "opencode-go-1",
+      "fallbacks": []
+    },
+    "librarian": {
+      "model": "deepseek-v4-flash",
+      "source": "opencode-go-1",
+      "fallbacks": []
+    },
+    "explore": {
+      "model": "mimo-v2.5-pro",
+      "source": "xiaomi-1",
+      "fallbacks": []
+    },
+    "multimodal-looker": {
+      "model": "mimo-v2.5",
+      "source": "xiaomi-1",
+      "fallbacks": []
+    },
+    "prometheus": {
+      "model": "deepseek-v4-pro",
+      "source": "opencode-go-1",
+      "fallbacks": []
+    },
+    "metis": {
+      "model": "mimo-v2.5-pro",
+      "source": "xiaomi-1",
+      "fallbacks": []
+    },
+    "momus": {
+      "model": "deepseek-v4-flash",
+      "source": "opencode-go-1",
+      "fallbacks": []
+    },
+    "atlas": {
+      "model": "mimo-v2.5-pro",
+      "source": "xiaomi-1",
+      "fallbacks": []
+    },
+    "code-reviewer": {
+      "model": "deepseek-v4-pro",
+      "source": "opencode-go-1",
+      "fallbacks": []
+    },
+    "sisyphus-junior": {
+      "model": "deepseek-v4-flash",
+      "source": "opencode-go-1",
+      "fallbacks": []
+    }
+  },
+  "runtime_fallback": {
+    "enabled": true,
+    "retry_on_errors": [
+      400,
+      429,
+      503,
+      529
+    ],
+    "max_fallback_attempts": 3,
+    "cooldown_seconds": 60,
+    "timeout_seconds": 30,
+    "notify_on_fallback": true
+  },
+  "background_task": {
+    "defaultConcurrency": 5,
+    "staleTimeoutMs": 180000
+  }
+}

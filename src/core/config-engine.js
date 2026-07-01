@@ -18,6 +18,16 @@ export async function generateAllConfigs(projectConfig) {
     throw new Error(`Configuración inválida: ${validation.errors.join(', ')}`);
   }
 
+  // Filtrar cuentas que no pertenecen a proveedores activos para evitar fallbacks inválidos
+  const activeProviders = projectConfig.providers || [];
+  const cleanedAccounts = {};
+  for (const provider of activeProviders) {
+    if (projectConfig.accounts && projectConfig.accounts[provider]) {
+      cleanedAccounts[provider] = projectConfig.accounts[provider];
+    }
+  }
+  projectConfig.accounts = cleanedAccounts;
+
   const configWithFallbacks = autoGenerateFallbacks(projectConfig);
 
   const results = {
