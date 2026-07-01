@@ -1521,6 +1521,18 @@ app.use((err, req, res, _next) => {
  * Resuelve las credenciales y URL real de una cuenta específica
  */
 async function getAccountRealConfig(accountId) {
+  // Manejo especial para Cavoti (separa claves GPT y Claude basándose en el sufijo del ID de cuenta de OpenCode)
+  if (accountId.startsWith('cavoti')) {
+    const isClaude = accountId.endsWith('-claude');
+    const apiKey = isClaude ? process.env.CAVOTI_CLAUDE_KEY : process.env.CAVOTI_GPT_KEY;
+    return {
+      apiKey,
+      baseURL: 'https://cavoti.com/v1',
+      provider: 'cavoti',
+      label: isClaude ? 'Cavoti Claude (Respaldo)' : 'Cavoti GPT (Principal)'
+    };
+  }
+
   const accounts = await leerJSON(path.join(DIRS.data, 'accounts.json')) || [];
   
   let acc = null;

@@ -239,8 +239,7 @@ export async function generate(projectConfig) {
   const proxyBase = process.env.PROXY_BASE_URL || "http://127.0.0.1:3847";
   for (const [providerAccId, pConfig] of Object.entries(config.provider || {})) {
     if (!pConfig.api || pConfig.api === 'openai') {
-      const realAccountId = providerAccId.replace('-claude', '');
-      pConfig.options.baseURL = `${proxyBase}/api/proxy/${projectConfig.id}/${realAccountId}`;
+      pConfig.options.baseURL = `${proxyBase}/api/proxy/${projectConfig.id}/${providerAccId}`;
     }
   }
 
