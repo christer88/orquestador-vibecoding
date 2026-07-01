@@ -35,8 +35,17 @@ export async function testConnection(providerId, apiKey) {
       'Content-Type': 'application/json'
     };
     
+    let testEndpoint = provider.testEndpoint;
+    if (providerId === 'xiaomi') {
+      if (apiKey && apiKey.startsWith('sk-')) {
+        testEndpoint = 'https://api.xiaomimimo.com/v1/models';
+      } else {
+        testEndpoint = 'https://token-plan-sgp.xiaomimimo.com/v1/models';
+      }
+    }
+
     // Test simple dependiendo del endpoint (usualmente /v1/models)
-    const response = await fetch(provider.testEndpoint, { headers });
+    const response = await fetch(testEndpoint, { headers });
     
     if (response.ok) {
       return { success: true, message: 'Conexión exitosa' };

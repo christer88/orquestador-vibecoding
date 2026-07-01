@@ -1188,7 +1188,16 @@ app.post('/api/accounts/:id/test', asyncHandler(async (req, res) => {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000); // 10s timeout
 
-    const respuesta = await fetch(proveedor.testEndpoint, {
+    let testEndpoint = proveedor.testEndpoint;
+    if (cuenta.provider === 'xiaomi') {
+      if (apiKey.startsWith('sk-')) {
+        testEndpoint = 'https://api.xiaomimimo.com/v1/models';
+      } else {
+        testEndpoint = 'https://token-plan-sgp.xiaomimimo.com/v1/models';
+      }
+    }
+
+    const respuesta = await fetch(testEndpoint, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
