@@ -1660,16 +1660,19 @@ app.post('/api/proxy/:projectId/:accountId/chat/completions', asyncHandler(async
   const { apiKey, baseURL } = config;
   const targetUrl = `${baseURL}/chat/completions`;
   
-  // Filtrar cabeceras para evitar duplicados y conflictos de autorización
+  // Filtrar cabeceras para evitar duplicados y conflictos de autorización/contenido
   const headers = {};
   for (const [key, value] of Object.entries(req.headers)) {
     const lowerKey = key.toLowerCase();
-    if (lowerKey !== 'host' && lowerKey !== 'content-length' && lowerKey !== 'authorization') {
+    if (lowerKey !== 'host' && 
+        lowerKey !== 'content-length' && 
+        lowerKey !== 'authorization' && 
+        lowerKey !== 'content-type') {
       headers[key] = value;
     }
   }
-  headers['Authorization'] = `Bearer ${apiKey}`;
-  headers['Content-Type'] = 'application/json';
+  headers['authorization'] = `Bearer ${apiKey}`;
+  headers['content-type'] = 'application/json';
   
   const isStream = req.body.stream === true;
   const body = JSON.stringify(req.body);
