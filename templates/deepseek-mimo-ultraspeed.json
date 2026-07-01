@@ -1,0 +1,26 @@
+{
+  "name": "Mix: DeepSeek + MiMo Ultraspeed (Créditos)",
+  "description": "DeepSeek V4 Pro/Flash (OpenCode) + MiMo V2.5 Pro Ultraspeed (Xiaomi Créditos) con fallback a MiMo V2.5 Pro (Token Plan).",
+  "providers": ["opencode-go", "xiaomi"],
+  "accounts": {
+    "opencode-go": [{ "id": "opencode-go-1", "label": "OpenCode Go" }],
+    "xiaomi": [
+      { "id": "xiaomi-2", "label": "API Credits (Principal)", "envKey": "XIAOMI_2_API_KEY" },
+      { "id": "xiaomi-1", "label": "Token Plan (Respaldo)", "envKey": "XIAOMI_1_API_KEY" }
+    ]
+  },
+  "agents": {
+    "sisyphus": { "model": "deepseek-v4-pro", "source": "opencode-go-1", "fallbacks": [] },
+    "hephaestus": { "model": "mimo-v2.5-pro-ultraspeed", "source": "xiaomi-2", "fallbacks": [{ "model": "mimo-v2.5-pro", "source": "xiaomi-1" }] },
+    "oracle": { "model": "deepseek-v4-flash", "source": "opencode-go-1", "fallbacks": [] },
+    "librarian": { "model": "deepseek-v4-flash", "source": "opencode-go-1", "fallbacks": [] },
+    "explore": { "model": "mimo-v2.5-pro-ultraspeed", "source": "xiaomi-2", "fallbacks": [{ "model": "mimo-v2.5-pro", "source": "xiaomi-1" }] },
+    "multimodal-looker": { "model": "mimo-v2.5-pro-ultraspeed", "source": "xiaomi-2", "fallbacks": [{ "model": "mimo-v2.5-pro", "source": "xiaomi-1" }] },
+    "prometheus": { "model": "deepseek-v4-pro", "source": "opencode-go-1", "fallbacks": [] },
+    "metis": { "model": "mimo-v2.5-pro-ultraspeed", "source": "xiaomi-2", "fallbacks": [{ "model": "mimo-v2.5-pro", "source": "xiaomi-1" }] },
+    "momus": { "model": "deepseek-v4-flash", "source": "opencode-go-1", "fallbacks": [] },
+    "atlas": { "model": "mimo-v2.5-pro-ultraspeed", "source": "xiaomi-2", "fallbacks": [{ "model": "mimo-v2.5-pro", "source": "xiaomi-1" }] },
+    "code-reviewer": { "model": "deepseek-v4-pro", "source": "opencode-go-1", "fallbacks": [] },
+    "sisyphus-junior": { "model": "deepseek-v4-flash", "source": "opencode-go-1", "fallbacks": [] }
+  }
+}
