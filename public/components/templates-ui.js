@@ -136,6 +136,7 @@ export default {
         { id: 'deepseek-api-1', label: 'Default DeepSeek API' },
         { id: 'moonshot-1', label: 'Default Moonshot AI' },
         { id: 'minimax-1', label: 'Default MiniMax' },
+        { id: 'nvidia-1', label: 'Default NVIDIA API' },
         { id: 'cavoti-1', label: 'Cavoti GPT' },
         { id: 'cavoti-2', label: 'Cavoti Claude' }
       ];
