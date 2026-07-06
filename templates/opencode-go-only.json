@@ -8,11 +8,11 @@
   "agents": {
     "sisyphus": { "model": "kimi-k2.6", "source": "opencode-go-1", "fallbacks": ["openrouter-1/deepseek-v4-pro"] },
     "hephaestus": { "model": "deepseek-v4-pro", "source": "openrouter-1", "fallbacks": ["openrouter-1/deepseek-v4-flash"] },
-    "oracle": { "model": "glm-5.1", "source": "opencode-go-1", "fallbacks": ["opencode-go-1/kimi-k2.6"] },
+    "oracle": { "model": "glm-5.2", "source": "opencode-go-1", "fallbacks": ["opencode-go-1/kimi-k2.6"] },
     "librarian": { "model": "deepseek-v4-flash", "source": "openrouter-1", "fallbacks": [] },
     "explore": { "model": "deepseek-v4-flash", "source": "openrouter-1", "fallbacks": [] },
     "multimodal-looker": { "model": "mimo-v2-omni", "source": "opencode-go-1", "fallbacks": [] },
-    "prometheus": { "model": "glm-5.1", "source": "opencode-go-1", "fallbacks": ["opencode-go-1/qwen3.6-plus"] },
+    "prometheus": { "model": "glm-5.2", "source": "opencode-go-1", "fallbacks": ["opencode-go-1/qwen3.6-plus"] },
     "metis": { "model": "qwen3.6-plus", "source": "opencode-go-1", "fallbacks": ["openrouter-1/deepseek-v4-pro"] },
     "momus": { "model": "qwen3.6-plus", "source": "opencode-go-1", "fallbacks": ["opencode-go-1/kimi-k2.6"] },
     "atlas": { "model": "deepseek-v4-pro", "source": "openrouter-1", "fallbacks": ["openrouter-1/deepseek-v4-flash"] },

@@ -13,7 +13,7 @@
     "explore": { "model": "deepseek-v4-flash", "source": "opencode-go-1", "fallbacks": [] },
     "multimodal-looker": { "model": "mimo-v2-omni", "source": "opencode-go-1", "fallbacks": [] },
     "prometheus": { "model": "qwen3.6-plus", "source": "opencode-go-1", "fallbacks": [] },
-    "metis": { "model": "glm-5.1", "source": "opencode-go-1", "fallbacks": [] },
+    "metis": { "model": "glm-5.2", "source": "opencode-go-1", "fallbacks": [] },
     "momus": { "model": "deepseek-v4-flash", "source": "opencode-go-1", "fallbacks": [] },
     "atlas": { "model": "qwen3.6-plus", "source": "opencode-go-1", "fallbacks": [] },
     "code-reviewer": { "model": "kimi-k2.6", "source": "opencode-go-1", "fallbacks": [] },

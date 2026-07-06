@@ -4,7 +4,7 @@ const PROVIDER_MODELS = {
     'kimi-k2.7': 'Kimi K2.7',
     'deepseek-v4-flash': 'DeepSeek V4 Flash',
     'deepseek-v4-pro': 'DeepSeek V4 Pro',
-    'glm-5.1': 'GLM-5.1',
+    'glm-5.2': 'GLM-5.2',
     'glm-5.2': 'GLM-5.2',
     'qwen3.6-plus': 'Qwen 3.6 Plus',
     'qwen3.7-plus': 'Qwen 3.7 Plus',
@@ -21,7 +21,7 @@ const PROVIDER_MODELS = {
     'kimi-k2.6': 'Kimi K2.6',
     'deepseek-v4-flash': 'DeepSeek V4 Flash',
     'deepseek-v4-pro': 'DeepSeek V4 Pro',
-    'glm-5.1': 'GLM-5.1',
+    'glm-5.2': 'GLM-5.2',
     'qwen3.6-plus': 'Qwen 3.6 Plus',
     'qwen3.5-plus': 'Qwen 3.5 Plus',
     'mimo-v2-omni': 'MiMo-V2 Omni',
@@ -53,7 +53,7 @@ const PROVIDER_MODELS = {
     'nvidia/llama-3.1-nemotron-nano-vl-8b-v1': 'Llama 3.1 Nemotron Nano VL 8B',
     'openai/gpt-oss-120b': 'GPT OSS 120B',
     'qwen/qwen3-next-80b-a3b-instruct': 'Qwen 3 Next 80B Instruct',
-    'z-ai/glm-5.1': 'Z.ai GLM-5.1',
+    'z-ai/glm-5.2': 'Z.ai GLM-5.2',
     'z-ai/glm-5.2': 'Z.ai GLM-5.2',
     'deepseek-ai/deepseek-v4-flash': 'DeepSeek V4 Flash',
     'deepseek-ai/deepseek-v4-pro': 'DeepSeek V4 Pro',
@@ -190,7 +190,7 @@ export async function generate(projectConfig) {
           if (modelId === 'kimi-k2.6') realModelId = 'moonshot/kimi-k2.6';
           else if (modelId === 'deepseek-v4-flash') realModelId = 'deepseek/deepseek-v4-flash';
           else if (modelId === 'deepseek-v4-pro') realModelId = 'deepseek/deepseek-v4-pro';
-          else if (modelId === 'glm-5.1') realModelId = 'thudm/glm-5.1';
+          else if (modelId === 'glm-5.2') realModelId = 'thudm/glm-5.2';
           else if (modelId === 'qwen3.6-plus') realModelId = 'qwen/qwen3.6-plus';
           else if (modelId === 'qwen3.5-plus') realModelId = 'qwen/qwen3.5-plus';
           else if (modelId === 'mimo-v2-omni') realModelId = 'xiaomi/mimo-v2-omni';

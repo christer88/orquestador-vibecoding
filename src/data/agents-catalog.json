@@ -11,7 +11,7 @@
       "category": "orchestrator",
       "description": "Orquestador principal. Coordina todos los demás agentes. Punto de entrada para tareas complejas.",
       "recommended_tier": 3,
-      "recommended_models": ["kimi-k2.6", "glm-5.1"],
+      "recommended_models": ["kimi-k2.6", "glm-5.2"],
       "typical_requests_per_session": "50-200"
     },
     {
@@ -33,7 +33,7 @@
       "category": "orchestrator",
       "description": "Consultor de arquitectura. Decisiones de diseño, razonamiento largo, planning.",
       "recommended_tier": 3,
-      "recommended_models": ["glm-5.1", "kimi-k2.6"],
+      "recommended_models": ["glm-5.2", "kimi-k2.6"],
       "typical_requests_per_session": "10-30"
     },
     {
@@ -77,7 +77,7 @@
       "category": "orchestrator",
       "description": "Planificador. Spec-writing, diseño arquitectónico, entrevistas de scope.",
       "recommended_tier": 3,
-      "recommended_models": ["glm-5.1", "qwen3.6-plus"],
+      "recommended_models": ["glm-5.2", "qwen3.6-plus"],
       "typical_requests_per_session": "10-25"
     },
     {

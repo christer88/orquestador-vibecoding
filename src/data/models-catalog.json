@@ -120,8 +120,8 @@
       "is_free": false
     },
     {
-      "id": "glm-5.1",
-      "name": "GLM 5.1",
+      "id": "glm-5.2",
+      "name": "GLM 5.2",
       "provider_origin": "zhipu",
       "tier": 3,
       "pricing": {
@@ -143,8 +143,8 @@
       "context_window": 131072,
       "supports_tools": true,
       "supports_vision": false,
-      "openrouter_id": "zhipu/glm-5.1",
-      "opencode_go_id": "glm-5.1",
+      "openrouter_id": "zhipu/glm-5.2",
+      "opencode_go_id": "glm-5.2",
       "is_free": false
     },
     {
@@ -588,17 +588,7 @@
       "supports_vision": true,
       "is_free": true
     },
-    {
-      "id": "z-ai/glm-5.1",
-      "name": "Z.ai GLM-5.1",
-      "provider_origin": "nvidia",
-      "tier": 2,
-      "available_sources": [
-        "nvidia"
-      ],
-      "context_window": 32768,
-      "is_free": true
-    },
+
     {
       "id": "z-ai/glm-5.2",
       "name": "Z.ai GLM-5.2",

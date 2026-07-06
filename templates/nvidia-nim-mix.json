@@ -11,7 +11,7 @@
     "oracle": { "model": "qwen/qwen3-next-80b-a3b-instruct", "source": "nvidia-1", "fallbacks": [] },
     "librarian": { "model": "qwen/qwen3-next-80b-a3b-instruct", "source": "nvidia-1", "fallbacks": [] },
     "explore": { "model": "openai/gpt-oss-120b", "source": "nvidia-1", "fallbacks": [] },
-    "multimodal-looker": { "model": "z-ai/glm-5.1", "source": "nvidia-1", "fallbacks": [] },
+    "multimodal-looker": { "model": "z-ai/glm-5.2", "source": "nvidia-1", "fallbacks": [] },
     "prometheus": { "model": "nvidia/nemotron-3-ultra-550b-a55b", "source": "nvidia-1", "fallbacks": [] },
     "metis": { "model": "nvidia/nemotron-3-super-120b-a12b", "source": "nvidia-1", "fallbacks": [] },
     "momus": { "model": "openai/gpt-oss-120b", "source": "nvidia-1", "fallbacks": [] },
