@@ -600,6 +600,39 @@
       "is_free": true
     },
     {
+      "id": "z-ai/glm-5.2",
+      "name": "Z.ai GLM-5.2",
+      "provider_origin": "nvidia",
+      "tier": 2,
+      "available_sources": [
+        "nvidia"
+      ],
+      "context_window": 32768,
+      "is_free": true
+    },
+    {
+      "id": "deepseek-ai/deepseek-v4-flash",
+      "name": "DeepSeek V4 Flash",
+      "provider_origin": "nvidia",
+      "tier": 2,
+      "available_sources": [
+        "nvidia"
+      ],
+      "context_window": 32768,
+      "is_free": true
+    },
+    {
+      "id": "deepseek-ai/deepseek-v4-pro",
+      "name": "DeepSeek V4 Pro",
+      "provider_origin": "nvidia",
+      "tier": 1,
+      "available_sources": [
+        "nvidia"
+      ],
+      "context_window": 32768,
+      "is_free": true
+    },
+    {
       "id": "gpt-5.5",
       "name": "gpt-5.5",
       "provider_origin": "openai",

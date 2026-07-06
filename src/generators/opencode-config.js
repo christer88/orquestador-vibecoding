@@ -54,6 +54,9 @@ const PROVIDER_MODELS = {
     'openai/gpt-oss-120b': 'GPT OSS 120B',
     'qwen/qwen3-next-80b-a3b-instruct': 'Qwen 3 Next 80B Instruct',
     'z-ai/glm-5.1': 'Z.ai GLM-5.1',
+    'z-ai/glm-5.2': 'Z.ai GLM-5.2',
+    'deepseek-ai/deepseek-v4-flash': 'DeepSeek V4 Flash',
+    'deepseek-ai/deepseek-v4-pro': 'DeepSeek V4 Pro',
     'minimaxai/minimax-m2.7': 'MiniMax M2.7',
     'moonshotai/kimi-k2.6': 'Kimi K2.6'
   },
