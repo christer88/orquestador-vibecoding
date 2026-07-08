@@ -1496,6 +1496,10 @@ app.post('/api/backup/import', upload.single('backup'), asyncHandler(async (req,
     await fs.rm(extractDir, { recursive: true, force: true });
     await fs.rm(zipPath, { force: true });
 
+    // Recargar variables de entorno inmediatamente en el proceso actual
+    // para evitar race conditions mientras PM2 se reinicia
+    dotenv.config({ override: true });
+
     res.json({ ok: true, message: 'Respaldo importado y restaurado correctamente.' });
     
     // Intentar reiniciar PM2 en segundo plano
@@ -1689,8 +1693,11 @@ app.post('/api/proxy/:projectId/:accountId/chat/completions', asyncHandler(async
   headers['authorization'] = `Bearer ${apiKey}`;
   headers['content-type'] = 'application/json';
   
-  const isStream = req.body.stream === true;
-  const body = JSON.stringify(req.body);
+  const reqBody = { ...req.body };
+  delete reqBody.promptCacheKey; // Remove OpenCode specific parameter that strict APIs reject
+  
+  const isStream = reqBody.stream === true;
+  const body = JSON.stringify(reqBody);
   
   try {
     const apiRes = await fetch(targetUrl, {

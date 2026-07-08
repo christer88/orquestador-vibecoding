@@ -153,3 +153,26 @@ npm install
 npx pm2 restart orquestador --update-env
 ```
 Tus archivos `.env` y de base de datos (`accounts.json`) no se verán afectados, ya que están estrictamente protegidos por el `.gitignore`.
+
+**⚠️ Importante después de actualizar:**
+Si la actualización incluyó nuevos modelos en el catálogo (ej. nuevos DeepSeek, MiniMax o GLM) o correcciones en el proxy, es recomendable que entres a la interfaz web (`http://localhost:3847`) y presiones el botón **"🔄 Actualizar"** en las tarjetas de tus proyectos activos. Esto forzará la regeneración de los archivos `opencode.json` y `oh-my-openagent.json` inyectando las nuevas mejoras y catálogos en tu entorno de trabajo actual.
+
+---
+
+## 5. Solución de Problemas (Troubleshooting)
+
+### 🔴 Error HTTP 401 (Key Incorrecta) al probar conexión tras restaurar un backup o cambiar llaves
+Si al hacer clic en "Probar Conexión" en la interfaz web obtienes un error 401 Unauthorized, pero estás seguro de que tu clave es válida y está correctamente guardada en el archivo `.env`, el problema puede ser la memoria caché de PM2.
+
+**¿Qué está pasando?**
+PM2 (el gestor de procesos) puede guardar en caché una versión antigua o inválida de tus variables de entorno (como `CAVOTI_GPT_KEY`). Dado que Node.js por defecto no sobrescribe variables que ya existen en la memoria del sistema, el orquestador sigue intentando conectarse usando la clave vieja (residual) en lugar de leer la nueva desde tu archivo `.env`.
+
+**Solución:**
+En lugar de un simple reinicio, debes eliminar el proceso de PM2 de la memoria y volver a iniciarlo desde cero para forzar una lectura limpia de tu archivo `.env`:
+
+```bash
+npx pm2 delete orquestador
+npx pm2 start server.js --name orquestador
+npx pm2 save
+```
+Una vez ejecutado, vuelve a la interfaz web y presiona "Probar Conexión". Debería devolver `Conexión exitosa (HTTP 200)`.

@@ -54,8 +54,7 @@ const PROVIDER_MODELS = {
     'openai/gpt-oss-120b': 'GPT OSS 120B',
     'qwen/qwen3-next-80b-a3b-instruct': 'Qwen 3 Next 80B Instruct',
     'z-ai/glm-5.2': 'Z.ai GLM-5.2',
-    'z-ai/glm-5.2': 'Z.ai GLM-5.2',
-    'deepseek-ai/deepseek-v4-flash': 'DeepSeek V4 Flash',
+    'minimaxai/minimax-m3': 'MiniMax M3',
     'deepseek-ai/deepseek-v4-pro': 'DeepSeek V4 Pro',
     'minimaxai/minimax-m2.7': 'MiniMax M2.7',
     'moonshotai/kimi-k2.6': 'Kimi K2.6'
@@ -90,7 +89,7 @@ export async function generate(projectConfig) {
     $schema: "https://opencode.ai/config.json",
     // Plugin de agentes Oh My OpenAgent — necesario para cargar agentes y herramientas
     plugin: ["oh-my-openagent", "ui-ux-pro-max"],
-    model: "deepseek-v4-flash", // Modelo default barato
+    model: "minimax-m3", // Modelo default barato
     permission: "allow",
     provider: {},
     theme: "opencode",
