@@ -1496,6 +1496,10 @@ app.post('/api/backup/import', upload.single('backup'), asyncHandler(async (req,
     await fs.rm(extractDir, { recursive: true, force: true });
     await fs.rm(zipPath, { force: true });
 
+    // Recargar variables de entorno inmediatamente en el proceso actual
+    // para evitar race conditions mientras PM2 se reinicia
+    dotenv.config({ override: true });
+
     res.json({ ok: true, message: 'Respaldo importado y restaurado correctamente.' });
     
     // Intentar reiniciar PM2 en segundo plano
