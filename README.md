@@ -153,3 +153,6 @@ npm install
 npx pm2 restart orquestador --update-env
 ```
 Tus archivos `.env` y de base de datos (`accounts.json`) no se verán afectados, ya que están estrictamente protegidos por el `.gitignore`.
+
+**⚠️ Importante después de actualizar:**
+Si la actualización incluyó nuevos modelos en el catálogo (ej. nuevos DeepSeek, MiniMax o GLM) o correcciones en el proxy, es recomendable que entres a la interfaz web (`http://localhost:3847`) y presiones el botón **"🔄 Actualizar"** en las tarjetas de tus proyectos activos. Esto forzará la regeneración de los archivos `opencode.json` y `oh-my-openagent.json` inyectando las nuevas mejoras y catálogos en tu entorno de trabajo actual.
