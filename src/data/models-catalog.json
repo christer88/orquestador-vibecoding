@@ -601,8 +601,8 @@
       "is_free": true
     },
     {
-      "id": "deepseek-ai/deepseek-v4-flash",
-      "name": "DeepSeek V4 Flash",
+      "id": "minimaxai/minimax-m3",
+      "name": "MiniMax M3",
       "provider_origin": "nvidia",
       "tier": 2,
       "available_sources": [

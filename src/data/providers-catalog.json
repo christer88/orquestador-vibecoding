@@ -23,7 +23,7 @@
         "qwen/qwen3-next-80b-a3b-instruct",
         "nvidia/nemotron-3-ultra-550b-a55b",
         "z-ai/glm-5.2",
-        "deepseek-ai/deepseek-v4-flash",
+        "minimaxai/minimax-m3",
         "deepseek-ai/deepseek-v4-pro",
         "minimaxai/minimax-m2.7",
         "moonshotai/kimi-k2.6"

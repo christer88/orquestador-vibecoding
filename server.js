@@ -1689,8 +1689,11 @@ app.post('/api/proxy/:projectId/:accountId/chat/completions', asyncHandler(async
   headers['authorization'] = `Bearer ${apiKey}`;
   headers['content-type'] = 'application/json';
   
-  const isStream = req.body.stream === true;
-  const body = JSON.stringify(req.body);
+  const reqBody = { ...req.body };
+  delete reqBody.promptCacheKey; // Remove OpenCode specific parameter that strict APIs reject
+  
+  const isStream = reqBody.stream === true;
+  const body = JSON.stringify(reqBody);
   
   try {
     const apiRes = await fetch(targetUrl, {
