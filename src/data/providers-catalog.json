@@ -284,6 +284,48 @@
         "vision": false,
         "file_upload": false
       }
+    },
+    {
+      "id": "ollama-cloud",
+      "name": "Ollama Cloud",
+      "description": "Ollama Cloud provider",
+      "type": "api",
+      "endpoint": "https://api.ollama.com/v1",
+      "testEndpoint": "https://api.ollama.com/v1/models",
+      "auth": {
+        "method": "api_key",
+        "env_key_pattern": "OLLAMA_CLOUD_API_KEY",
+        "auth_type": "bearer_token",
+        "header": "Authorization",
+        "notes": "Ollama Cloud API Key"
+      },
+      "multi_account": false,
+      "max_accounts": 1,
+      "rate_limit_strategy": "global",
+      "supported_models": [
+        "glm-5.2",
+        "gemma4",
+        "qwen3.5",
+        "glm-5.1",
+        "minimax-m2.7",
+        "nemotron-3-super",
+        "glm-5",
+        "minimax-m2.5",
+        "minimax-m3",
+        "kimi-k2.7-code",
+        "kimi-k2.6",
+        "deepseek-v4-flash",
+        "deepseek-v4-pro",
+        "kimi-k2.5"
+      ],
+      "config_format": "openai_compatible",
+      "model_prefix": null,
+      "features": {
+        "streaming": true,
+        "tool_use": true,
+        "vision": false,
+        "file_upload": false
+      }
     }
   ]
 }

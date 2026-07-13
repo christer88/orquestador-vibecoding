@@ -1,0 +1,22 @@
+{
+  "name": "Ollama Cloud Only (Concurrencia Max 3)",
+  "description": "Plantilla que usa exclusivamente Ollama Cloud, distribuyendo el trabajo en 3 modelos (GLM-5.2, DeepSeek-V4-Pro y Qwen3.5) para respetar el límite de 3 peticiones concurrentes.",
+  "providers": ["ollama-cloud"],
+  "accounts": {
+    "ollama-cloud": [{ "id": "87c4d521-933e-4b6a-93f4-d576a084c015", "label": "Cuenta Principal Ollama" }]
+  },
+  "agents": {
+    "sisyphus": { "model": "deepseek-v4-pro", "source": "87c4d521-933e-4b6a-93f4-d576a084c015", "fallbacks": [] },
+    "hephaestus": { "model": "deepseek-v4-pro", "source": "87c4d521-933e-4b6a-93f4-d576a084c015", "fallbacks": [] },
+    "oracle": { "model": "glm-5.2", "source": "87c4d521-933e-4b6a-93f4-d576a084c015", "fallbacks": [] },
+    "librarian": { "model": "qwen3.5", "source": "87c4d521-933e-4b6a-93f4-d576a084c015", "fallbacks": [] },
+    "explore": { "model": "qwen3.5", "source": "87c4d521-933e-4b6a-93f4-d576a084c015", "fallbacks": [] },
+    "multimodal-looker": { "model": "qwen3.5", "source": "87c4d521-933e-4b6a-93f4-d576a084c015", "fallbacks": [] },
+    "prometheus": { "model": "glm-5.2", "source": "87c4d521-933e-4b6a-93f4-d576a084c015", "fallbacks": [] },
+    "metis": { "model": "glm-5.2", "source": "87c4d521-933e-4b6a-93f4-d576a084c015", "fallbacks": [] },
+    "momus": { "model": "qwen3.5", "source": "87c4d521-933e-4b6a-93f4-d576a084c015", "fallbacks": [] },
+    "atlas": { "model": "deepseek-v4-pro", "source": "87c4d521-933e-4b6a-93f4-d576a084c015", "fallbacks": [] },
+    "code-reviewer": { "model": "deepseek-v4-pro", "source": "87c4d521-933e-4b6a-93f4-d576a084c015", "fallbacks": [] },
+    "sisyphus-junior": { "model": "qwen3.5", "source": "87c4d521-933e-4b6a-93f4-d576a084c015", "fallbacks": [] }
+  }
+}

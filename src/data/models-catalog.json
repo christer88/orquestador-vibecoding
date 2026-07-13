@@ -81,7 +81,8 @@
       "available_sources": [
         "opencode-go",
         "openrouter",
-        "deepseek-api"
+        "deepseek-api",
+        "ollama-cloud"
       ],
       "context_window": 131072,
       "supports_tools": true,
@@ -815,7 +816,8 @@
         "currency": "USD"
       },
       "available_sources": [
-        "opencode-go"
+        "opencode-go",
+        "ollama-cloud"
       ],
       "context_window": 131072,
       "supports_tools": true,
@@ -900,6 +902,106 @@
       "supports_tools": false,
       "supports_vision": false,
       "is_free": true
+    },
+    {
+      "id": "llama3.3",
+      "name": "Llama 3.3 (Ollama)",
+      "developer": "Meta",
+      "description": "Llama 3.3 model on Ollama Cloud",
+      "context_window": 128000,
+      "max_output": 8192,
+      "tier": "high",
+      "vision": false,
+      "tools": true
+    },
+    {
+      "id": "qwen3.5",
+      "name": "Qwen 3.5",
+      "developer": "Alibaba",
+      "description": "Qwen 3.5 open-source multimodal model.",
+      "context_window": 128000,
+      "max_output": 8192,
+      "tier": "medium",
+      "vision": true,
+      "tools": true
+    },
+    {
+      "id": "gemma4",
+      "name": "Gemma 4",
+      "developer": "Google",
+      "description": "Gemma 4 model for reasoning and coding.",
+      "context_window": 128000,
+      "max_output": 8192,
+      "tier": "medium",
+      "vision": true,
+      "tools": true
+    },
+    {
+      "id": "glm-5.1",
+      "name": "GLM 5.1",
+      "developer": "Z.ai",
+      "description": "GLM 5.1 flagship model.",
+      "context_window": 128000,
+      "max_output": 8192,
+      "tier": "high",
+      "vision": false,
+      "tools": true
+    },
+    {
+      "id": "nemotron-3-super",
+      "name": "Nemotron 3 Super",
+      "developer": "NVIDIA",
+      "description": "120B open MoE model.",
+      "context_window": 128000,
+      "max_output": 8192,
+      "tier": "high",
+      "vision": false,
+      "tools": true
+    },
+    {
+      "id": "glm-5",
+      "name": "GLM 5",
+      "developer": "Z.ai",
+      "description": "Strong reasoning model.",
+      "context_window": 128000,
+      "max_output": 8192,
+      "tier": "high",
+      "vision": false,
+      "tools": true
+    },
+    {
+      "id": "kimi-k2.7-code",
+      "name": "Kimi K2.7 Code",
+      "developer": "Moonshot AI",
+      "description": "Coding-focused agentic model.",
+      "context_window": 128000,
+      "max_output": 8192,
+      "tier": "high",
+      "vision": true,
+      "tools": true
+    },
+    {
+      "id": "kimi-k2.5",
+      "name": "Kimi K2.5",
+      "developer": "Moonshot AI",
+      "description": "Native multimodal agentic model.",
+      "context_window": 128000,
+      "max_output": 8192,
+      "tier": "medium",
+      "vision": true,
+      "tools": true
+    },
+    {
+      "id": "qwen3-coder",
+      "name": "Qwen 3 Coder",
+      "developer": "Alibaba",
+      "description": "Code-focused Qwen3 model.",
+      "context_window": 131072,
+      "max_output": 8192,
+      "tier": "medium",
+      "vision": false,
+      "tools": true,
+      "available_sources": ["ollama-cloud"]
     }
   ]
 }

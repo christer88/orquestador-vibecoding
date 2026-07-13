@@ -48,6 +48,29 @@ export default {
                 Genera tokens de sesión estructurados y optimiza el consumo de APIs para evitar Cache Misses.
               </p>
             </div>
+            
+            <h4 style="margin-top: var(--space-6); margin-bottom: var(--space-3); border-bottom: 1px dashed var(--border); padding-bottom: var(--space-2);">Skills Avanzados</h4>
+            <div id="skills-warnings" style="margin-bottom: var(--space-4);"></div>
+            <div class="form-group" style="margin-bottom: var(--space-3);">
+              <label class="form-checkbox"><input type="checkbox" id="skill-uipro" checked><span class="form-checkbox__label">UI/UX Pro Max</span></label>
+              <p class="form-hint" style="margin-top: var(--space-1); margin-left: 28px;">Forza al agente a crear diseños premium, coloridos y con animaciones.</p>
+            </div>
+            <div class="form-group" style="margin-bottom: var(--space-3);">
+              <label class="form-checkbox"><input type="checkbox" id="skill-ponytail"><span class="form-checkbox__label">Ponytail</span></label>
+              <p class="form-hint" style="margin-top: var(--space-1); margin-left: 28px;">Asistente minimalista (escribe solo el código necesario).</p>
+            </div>
+            <div class="form-group" style="margin-bottom: var(--space-3);">
+              <label class="form-checkbox"><input type="checkbox" id="skill-codebasememory"><span class="form-checkbox__label">Codebase-Memory-MCP</span></label>
+              <p class="form-hint" style="margin-top: var(--space-1); margin-left: 28px;">Motor ultrarrápido de inteligencia de código y AST.</p>
+            </div>
+            <div class="form-group" style="margin-bottom: var(--space-3);">
+              <label class="form-checkbox"><input type="checkbox" id="skill-engram"><span class="form-checkbox__label">Engram</span></label>
+              <p class="form-hint" style="margin-top: var(--space-1); margin-left: 28px;">Memoria persistente a largo plazo para tu agente.</p>
+            </div>
+            <div class="form-group" style="margin-bottom: var(--space-3);">
+              <label class="form-checkbox"><input type="checkbox" id="skill-speckit"><span class="form-checkbox__label">Spec-Kit</span></label>
+              <p class="form-hint" style="margin-top: var(--space-1); margin-left: 28px;">Herramientas para Spec-Driven Development.</p>
+            </div>
           </div>
           
           <!-- Vista Previa de la Plantilla -->
@@ -97,6 +120,30 @@ export default {
       this.loadTemplateDetails(e.target.value);
     });
 
+    const checkSkills = () => {
+      const uipro = document.getElementById('skill-uipro').checked;
+      const ponytail = document.getElementById('skill-ponytail').checked;
+      const codebase = document.getElementById('skill-codebasememory').checked;
+      const engram = document.getElementById('skill-engram').checked;
+      
+      let warningsHtml = '';
+      if (uipro && ponytail) {
+        warningsHtml += `<div style="padding: 10px; background: rgba(255,50,50,0.1); border: 1px solid red; border-radius: 4px; color: red; margin-bottom: 8px;">
+          <strong>🚨 Conflicto Crítico:</strong> Tienes activo UI/UX Pro (diseños ricos) y Ponytail (minimalismo extremo). El agente recibirá instrucciones contradictorias. Te sugerimos apagar uno.
+        </div>`;
+      }
+      if (codebase && engram) {
+        warningsHtml += `<div style="padding: 10px; background: rgba(255,200,0,0.1); border: 1px solid orange; border-radius: 4px; color: orange; margin-bottom: 8px;">
+          <strong>⚠️ Advertencia:</strong> Codebase-Memory y Engram simultáneos consumen una gran cantidad de tokens de contexto.
+        </div>`;
+      }
+      document.getElementById('skills-warnings').innerHTML = warningsHtml;
+    };
+
+    ['skill-uipro', 'skill-ponytail', 'skill-codebasememory', 'skill-engram'].forEach(id => {
+      document.getElementById(id).addEventListener('change', checkSkills);
+    });
+
     if (this.isEditMode) {
       await this.loadProjectForEdit(this.projectId);
     }
@@ -112,6 +159,17 @@ export default {
         document.getElementById('proj-name').value = p.name || '';
         document.getElementById('proj-desc').value = p.description || '';
         document.getElementById('proj-cache').checked = !!p.cacheOptimization;
+        
+        if (p.skills) {
+          document.getElementById('skill-uipro').checked = p.skills.uiPro !== false;
+          document.getElementById('skill-ponytail').checked = !!p.skills.ponytail;
+          document.getElementById('skill-codebasememory').checked = !!p.skills.codebaseMemory;
+          document.getElementById('skill-engram').checked = !!p.skills.engram;
+          document.getElementById('skill-speckit').checked = !!p.skills.specKit;
+        }
+        
+        // Trigger validation check to show any initial warnings
+        document.getElementById('skill-uipro').dispatchEvent(new Event('change'));
         
         // Sync dropdown to show correct template
         const matchedTemplate = this.templates.find(t => t.name === p.template);
@@ -225,7 +283,14 @@ export default {
         accounts: this.selectedTemplateData.accounts || {},
         agents: this.selectedTemplateData.agents || {},
         runtime_fallback: this.selectedTemplateData.runtime_fallback || {},
-        background_task: this.selectedTemplateData.background_task || {}
+        background_task: this.selectedTemplateData.background_task || {},
+        skills: {
+          uiPro: document.getElementById('skill-uipro').checked,
+          ponytail: document.getElementById('skill-ponytail').checked,
+          codebaseMemory: document.getElementById('skill-codebasememory').checked,
+          engram: document.getElementById('skill-engram').checked,
+          specKit: document.getElementById('skill-speckit').checked
+        }
       };
 
       const url = this.isEditMode ? `/api/projects/${this.projectId}` : '/api/projects';

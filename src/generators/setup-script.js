@@ -99,8 +99,35 @@ export PATH=$PATH:$HOME/.bun/bin
 # Usamos --skip-opencode si está disponible, si no usamos el normal pero nuestro config ya tiene el plugin
 bunx oh-my-opencode install --no-tui --claude=no --gemini=no --copilot=no --opencode-go=yes 2>&1 || true
 
+${!projectConfig.skills || projectConfig.skills.uiPro !== false ? `
 echo "📥 Instalando skill UI/UX Pro Max..."
 npx -y uipro-cli init --ai opencode
+` : ''}
+
+# --- Inyección de Skills Seleccionados ---
+${projectConfig.skills && projectConfig.skills.ponytail ? `
+echo "📥 Instalando Ponytail..."
+npm install -g @dietrichgebert/ponytail
+# Para opencode se requiere configurarlo como plugin (si es compatible) o usar Claude Code
+` : ''}
+${projectConfig.skills && projectConfig.skills.codebaseMemory ? `
+echo "📥 Instalando Codebase-Memory-MCP..."
+curl -fsSL https://raw.githubusercontent.com/DeusData/codebase-memory-mcp/main/install.sh | bash
+` : ''}
+${projectConfig.skills && projectConfig.skills.engram ? `
+echo "📥 Instalando Engram..."
+export PATH=$PATH:$HOME/.go/bin
+go install github.com/Gentleman-Programming/engram@latest
+engram setup opencode
+` : ''}
+${projectConfig.skills && projectConfig.skills.specKit ? `
+echo "📥 Instalando Spec-Kit..."
+curl -LsSf https://astral.sh/uv/install.sh | sh
+export PATH=$PATH:$HOME/.local/bin
+uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+specify init . --integration opencode
+` : ''}
+# ----------------------------------------
 
 # Restaurar nuestro opencode.json con proveedores y plugin ya inyectados por si el installer lo sobreescribió
 if [ -f opencode.json ]; then

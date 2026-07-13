@@ -1133,13 +1133,15 @@ app.put('/api/accounts/:id', asyncHandler(async (req, res) => {
   await escribirJSON(ACCOUNTS_FILE, cuentas);
   
   // Regenerar todos los proyectos para que los cambios surtan efecto inmediato
-  const proyectos = await leerProyectos();
-  for (const proy of proyectos) {
-    try {
-      await ejecutarGeneradores(proy);
-    } catch (e) {
-      console.warn(`No se pudo regenerar el proyecto ${proy.id}: ${e.message}`);
+  try {
+    const archivos = await fs.readdir(DIRS.projects);
+    for (const a of archivos) {
+      if (!a.endsWith('.json')) continue;
+      const proy = await leerJSON(path.join(DIRS.projects, a));
+      if (proy) await pushUpdateToDeployAndOpenCode(proy);
     }
+  } catch (e) {
+    console.warn(`No se pudo regenerar los proyectos: ${e.message}`);
   }
 
   res.json({ ok: true, account: cuentas[indice] });
@@ -1601,6 +1603,8 @@ async function getAccountRealConfig(accountId) {
     baseURL = 'https://integrate.api.nvidia.com/v1';
   } else if (acc.provider === 'opencode-go') {
     baseURL = 'https://opencode.ai/zen/go/v1';
+  } else if (acc.provider === 'ollama-cloud') {
+    baseURL = 'https://ollama.com/v1';
   } else {
     baseURL = 'https://api.openai.com/v1';
   }
