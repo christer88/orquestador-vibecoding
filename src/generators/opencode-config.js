@@ -73,6 +73,20 @@ const PROVIDER_MODELS = {
     'claude-opus-4-8': 'Claude Opus 4.8',
     'claude-sonnet-4-5-20250929': 'Claude Sonnet 4.5 (2025-09-29)',
     'claude-sonnet-4-6': 'Claude Sonnet 4.6'
+  },
+  'ollama-cloud': {
+    'deepseek-v4-pro': 'DeepSeek V4 Pro',
+    'glm-5.2': 'GLM-5.2',
+    'qwen3.5': 'Qwen 3.5',
+    'gemma4': 'Gemma 4',
+    'glm-5.1': 'GLM 5.1',
+    'nemotron-3-super': 'Nemotron 3 Super',
+    'glm-5': 'GLM 5',
+    'kimi-k2.7-code': 'Kimi K2.7 Code',
+    'kimi-k2.5': 'Kimi K2.5',
+    'deepseek-v4-flash': 'DeepSeek V4 Flash',
+    'qwen3-coder': 'Qwen 3 Coder',
+    'kimi-k2.7': 'Kimi K2.7'
   }
 };
 
@@ -167,6 +181,9 @@ export async function generate(projectConfig) {
             models: {}
           };
         }
+      } else if (providerId === 'ollama-cloud') {
+        providerConfig.api = 'openai';
+        providerConfig.options.baseURL = "https://ollama.com/v1";
       } else if (providerId.startsWith('custom-')) {
         // Fallback dinámico si se requiere
         providerConfig.api = 'openai';

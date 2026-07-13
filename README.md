@@ -16,6 +16,9 @@ Genera automáticamente archivos de ruteo (`oh-my-openagent.json`), configuraci�
 *   **Motor de Fallbacks Avanzado**: Ruteo inteligente y conmutación automática entre cuentas del mismo proveedor y entre proveedores de respaldo (ej. `opencode-go-1` ➡️ `opencode-go-2` ➡️ `openrouter`).
 *   **Módulo de Ayuda y Documentación Integrada**: Accede directamente desde la interfaz web a los manuales del sistema y las guías descriptivas de agentes generadas para cada uno de tus proyectos, con enlaces rápidos al repositorio de GitHub.
 *   **Catálogo de Agentes OmO**: Configura los 11 agentes de Oh My OpenAgent sugiriendo modelos y tiers óptimos para cada tarea (razonamiento, utilidades, orquestación, etc.).
+*   **Integración con Ollama Cloud**: Soporte nativo para Ollama Cloud con gestión de llaves, proxy transparente y selección directa de modelos como Qwen 3 Coder, Kimi K2.7, y DeepSeek V4 Flash.
+*   **Skills Avanzados (VibeCoding)**: Integración con utilidades como UI/UX Pro Max, Ponytail, Codebase-Memory, Engram y Spec-Kit configurables desde el Wizard de proyectos, con detección proactiva de conflictos (ej. combinar agentes minimalistas con diseñadores ricos).
+*   **Gestión de Backups Segura**: Opción de exportar e importar copias de seguridad en `.zip` que empaquetan localmente tus perfiles (`accounts.json`), variables de entorno (`.env`) y todas tus plantillas personalizadas para migrar o respaldar sin comprometer la seguridad.
 
 ---
 
@@ -109,6 +112,7 @@ Una vez que el servidor esté corriendo, abre tu navegador y visita `http://loca
 5.  **Actualizar Configuración**: Con el botón **"🔄 Actualizar"** puedes aplicar de forma inmediata y silenciosa cualquier cambio de configuración (ej. cambio de modelo, proveedor o permisos de `hashline_edit` para que los agentes delegados apliquen cambios) directamente a la carpeta de tu proyecto sin necesidad de reinstalar dependencias.
 6.  **Generar & Descargar**: En la tarjeta de tu proyecto también puedes presionar **"📦 Descargar ZIP"** si prefieres llevarte los archivos a otra máquina.
 7.  **Módulo de Ayuda**: Visita la sección **Ayuda** en la barra lateral para revisar el manual de usuario o consultar el `AGENTS-README.md` generado en tiempo real de cualquiera de tus proyectos activos.
+8.  **Exportar Backup Global**: Haz clic en el botón superior de "Descargar Respaldo" para crear un ZIP que contiene todas tus cuentas locales, tokens y plantillas maestras.
 
 ### ¿Qué contiene el archivo ZIP del proyecto?
 *   `oh-my-openagent.json`: Reglas de ruteo y conmutación de agentes.
