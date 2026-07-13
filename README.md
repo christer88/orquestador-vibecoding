@@ -1,5 +1,6 @@
 # 🚀 Orquestador VibeCoding
 
+![Orquestador VibeCoding Dashboard](assets/dashboard.png)
 Este orquestador es una aplicación local con interfaz web (SPA) diseñada para configurar, gestionar y desplegar entornos de desarrollo de IA coding multi-proveedor basados en **Oh My OpenAgent + OpenCode GO**, con soporte para múltiples fuentes de modelos y portabilidad total.
 
 Genera automáticamente archivos de ruteo (`oh-my-openagent.json`), configuración de proveedores (`opencode.json`), variables de entorno (`.env`), scripts de despliegue automatizados y documentación de referencia.
