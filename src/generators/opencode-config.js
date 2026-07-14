@@ -99,10 +99,18 @@ const CAVOTI_MODEL_META = {
 };
 
 export async function generate(projectConfig) {
+  const plugins = ["oh-my-openagent"];
+  if (!projectConfig.skills || projectConfig.skills.uiPro !== false) {
+    plugins.push("ui-ux-pro-max");
+  }
+  if (projectConfig.skills && projectConfig.skills.ponytail) {
+    plugins.push("@dietrichgebert/ponytail");
+  }
+
   const config = {
     $schema: "https://opencode.ai/config.json",
     // Plugin de agentes Oh My OpenAgent — necesario para cargar agentes y herramientas
-    plugin: ["oh-my-openagent", "ui-ux-pro-max"],
+    plugin: plugins,
     model: "minimax-m3", // Modelo default barato
     permission: "allow",
     provider: {},
