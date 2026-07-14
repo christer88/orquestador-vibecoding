@@ -109,7 +109,10 @@ echo "📥 Instalando Ponytail..."
 npm install -g @dietrichgebert/ponytail
 # Para opencode se requiere configurarlo como plugin (si es compatible) o usar Claude Code
 ` : ''}
-
+${projectConfig.skills && projectConfig.skills.codebaseMemory ? `
+echo "📥 Instalando Codebase-Memory-MCP..."
+curl -fsSL https://raw.githubusercontent.com/DeusData/codebase-memory-mcp/main/install.sh | bash
+` : ''}
 ${projectConfig.skills && projectConfig.skills.engram ? `
 echo "📥 Instalando Engram..."
 export PATH=$PATH:$HOME/go/bin:$HOME/.go/bin

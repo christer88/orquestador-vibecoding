@@ -271,13 +271,23 @@ export async function generate(projectConfig) {
   }
 
   // Integración de Skills MCP directamente en opencode.json
-  if (projectConfig.skills && projectConfig.skills.engram) {
-    config.mcp = {
-      engram: {
+  if (projectConfig.skills) {
+    const mcpConfig = {};
+    if (projectConfig.skills.engram) {
+      mcpConfig.engram = {
         type: 'local',
         command: ['bash', '-c', '$HOME/go/bin/engram mcp --tools=agent']
-      }
-    };
+      };
+    }
+    if (projectConfig.skills.codebaseMemory) {
+      mcpConfig['codebase-memory'] = {
+        type: 'local',
+        command: ['bash', '-c', '$HOME/.local/bin/codebase-memory-mcp']
+      };
+    }
+    if (Object.keys(mcpConfig).length > 0) {
+      config.mcp = mcpConfig;
+    }
   }
 
   return JSON.stringify(config, null, 2);
