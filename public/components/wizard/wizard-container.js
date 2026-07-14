@@ -64,6 +64,10 @@ export default {
               <p class="form-hint" style="margin-top: var(--space-1); margin-left: 28px;">Comunicación ultraconcisa para ahorrar un 70% de tokens.</p>
             </div>
             <div class="form-group" style="margin-bottom: var(--space-3);">
+              <label class="form-checkbox"><input type="checkbox" id="skill-tokenoptimizer"><span class="form-checkbox__label">Token Optimizer</span></label>
+              <p class="form-hint" style="margin-top: var(--space-1); margin-left: 28px;">Purga tokens fantasma de la memoria para evitar alucinaciones en sesiones largas.</p>
+            </div>
+            <div class="form-group" style="margin-bottom: var(--space-3);">
               <label class="form-checkbox"><input type="checkbox" id="skill-codebasememory"><span class="form-checkbox__label">Codebase-Memory-MCP</span></label>
               <p class="form-hint" style="margin-top: var(--space-1); margin-left: 28px;">Motor ultrarrápido de inteligencia de código y AST.</p>
             </div>
@@ -163,7 +167,7 @@ export default {
       document.getElementById('skills-warnings').innerHTML = warningsHtml;
     };
 
-    ['skill-uipro', 'skill-ponytail', 'skill-caveman', 'skill-codebasememory', 'skill-engram', 'skill-speckit', 'skill-githubmcp'].forEach(id => {
+    ['skill-uipro', 'skill-ponytail', 'skill-caveman', 'skill-tokenoptimizer', 'skill-codebasememory', 'skill-engram', 'skill-speckit', 'skill-githubmcp'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.addEventListener('change', checkSkills);
     });
@@ -198,6 +202,7 @@ export default {
           document.getElementById('skill-uipro').checked = p.skills.uiPro !== false;
           document.getElementById('skill-ponytail').checked = !!p.skills.ponytail;
           document.getElementById('skill-caveman').checked = !!p.skills.caveman;
+          document.getElementById('skill-tokenoptimizer').checked = !!p.skills.tokenOptimizer;
           document.getElementById('skill-codebasememory').checked = !!p.skills.codebaseMemory;
           document.getElementById('skill-engram').checked = !!p.skills.engram;
           document.getElementById('skill-speckit').checked = !!p.skills.specKit;
@@ -327,6 +332,7 @@ export default {
           uiPro: document.getElementById('skill-uipro').checked,
           ponytail: document.getElementById('skill-ponytail').checked,
           caveman: document.getElementById('skill-caveman').checked,
+          tokenOptimizer: document.getElementById('skill-tokenoptimizer').checked,
           codebaseMemory: document.getElementById('skill-codebasememory').checked,
           engram: document.getElementById('skill-engram').checked,
           specKit: document.getElementById('skill-speckit').checked,

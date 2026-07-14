@@ -367,6 +367,7 @@ echo "🔄 Actualizando dependencias de Skills y MCPs en background..."
   npm update -g @modelcontextprotocol/server-github >/dev/null 2>&1 || true
   npm update -g @juliusbrussee/caveman >/dev/null 2>&1 || true
   npm update -g @dietrichgebert/ponytail >/dev/null 2>&1 || true
+  npm update -g @alexgreensh/token-optimizer >/dev/null 2>&1 || true
   uv tool upgrade specify-cli >/dev/null 2>&1 || true
   go install github.com/joshua-fish/engram/cmd/engram@latest >/dev/null 2>&1 || true
 ) &

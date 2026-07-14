@@ -110,6 +110,9 @@ export async function generate(projectConfig) {
     if (projectConfig.skills.caveman) {
       plugins.push("@juliusbrussee/caveman");
     }
+    if (projectConfig.skills.tokenOptimizer) {
+      plugins.push("@alexgreensh/token-optimizer");
+    }
     if (projectConfig.skills.specKit) {
       plugins.push("specify");
     }
