@@ -121,7 +121,7 @@ Una vez que el servidor esté corriendo, abre tu navegador y visita `http://loca
 *   `oh-my-openagent.json`: Reglas de ruteo y conmutación de agentes.
 *   `opencode.json`: Declaración de proveedores, configurando `baseURL` y la compatibilidad con endpoints custom (ej. `opencode-go` ruteado a `https://opencode.ai/zen/go/v1`).
 *   `.env`: Declaración de las API Keys y variables del entorno del proyecto.
-*   `setup-ubuntu.sh`: Script auto-ejecutable que configura la VM destino instalando dependencias (Go, Bun), herramientas de VibeCoding (`opencode`, `command-code`, `oh-my-opencode`), inicializa archivos de configuración y copia las variables de entorno.
+*   `setup-ubuntu.sh`: Script auto-ejecutable que configura la VM destino instalando dependencias (Go, Bun), herramientas de VibeCoding (`opencode`, `oh-my-opencode`), inicializa archivos de configuración y copia las variables de entorno.
 *   `AGENTS-README.md`: Guía que detalla el rol, el tier recomendado y el modelo asignado de cada agente.
 
 ---
