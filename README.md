@@ -150,8 +150,9 @@ Si ya tienes el sistema instalado y he subido nuevas versiones a tu repositorio 
 # 1. Ingresa a la carpeta del orquestador
 cd ~/orquestador-vibecoding
 
-# 2. Descarga los últimos cambios del código fuente desde GitHub
-git pull origin main
+# 2. Descarga la versión más reciente (Forzando sincronización limpia)
+git fetch origin
+git reset --hard origin/main
 
 # 3. Instala posibles dependencias nuevas de Node (como multer, unzipper, etc.)
 npm install
