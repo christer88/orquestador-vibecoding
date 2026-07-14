@@ -10,11 +10,11 @@ mkdir -p ~/.npm-global
 npm config set prefix '~/.npm-global'
 
 # 2. Definir rutas en el PATH de la sesión actual
-export PATH=$PATH:$HOME/.npm-global/bin:$HOME/.go/bin:$HOME/.bun/bin:$HOME/.opencode/bin
+export PATH=$PATH:$HOME/.npm-global/bin:$HOME/go/bin:$HOME/.go/bin:$HOME/.bun/bin:$HOME/.opencode/bin
 
-# Agregar al .bashrc para persistencia si no están ya
-if ! grep -q "npm-global" ~/.bashrc; then
-  echo 'export PATH=$PATH:$HOME/.npm-global/bin:$HOME/.go/bin:$HOME/.bun/bin:$HOME/.opencode/bin' >> ~/.bashrc
+# 3. Hacer persistentes las rutas para futuras sesiones
+if ! grep -q ".npm-global/bin" ~/.bashrc; then
+  echo 'export PATH=$PATH:$HOME/.npm-global/bin:$HOME/go/bin:$HOME/.go/bin:$HOME/.bun/bin:$HOME/.opencode/bin' >> ~/.bashrc
   echo "✅ Rutas agregadas a ~/.bashrc para persistencia"
 fi
 
@@ -115,7 +115,7 @@ curl -fsSL https://raw.githubusercontent.com/DeusData/codebase-memory-mcp/main/i
 ` : ''}
 ${projectConfig.skills && projectConfig.skills.engram ? `
 echo "📥 Instalando Engram..."
-export PATH=$PATH:$HOME/.go/bin
+export PATH=$PATH:$HOME/go/bin:$HOME/.go/bin
     go install github.com/Gentleman-Programming/engram/cmd/engram@latest
 engram setup opencode
 ` : ''}
