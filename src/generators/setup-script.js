@@ -50,8 +50,7 @@ fi
 echo "📥 Instalando OpenCode CLI..."
 curl -fsSL https://opencode.ai/install | bash
 
-echo "📥 Instalando command-code localmente..."
-npm i -g command-code
+
 
 # 5. Copiar configs del proyecto ANTES de instalar oh-my-opencode
 # (Nuestro opencode.json ya incluye "oh-my-openagent" en el plugin array)
