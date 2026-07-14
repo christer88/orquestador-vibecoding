@@ -3,6 +3,7 @@ import * as opencodeGen from '../generators/opencode-config.js';
 import * as envGen from '../generators/env-generator.js';
 import * as readmeGen from '../generators/readme-generator.js';
 import * as setupGen from '../generators/setup-script.js';
+import * as mcpGen from '../generators/mcp-config.js';
 import { autoGenerateFallbacks } from './fallback-router.js';
 
 export async function validateConfig(config) {
@@ -38,6 +39,12 @@ export async function generateAllConfigs(projectConfig) {
     'setup-ubuntu.sh': await setupGen.generateUbuntu(projectConfig),
     'setup-debian.sh': await setupGen.generateDebian(projectConfig)
   };
+
+  const mcpConfig = await mcpGen.generate(projectConfig);
+  if (mcpConfig) {
+    results['.opencode/mcp.json'] = mcpConfig;
+  }
+
   
   return results;
 }

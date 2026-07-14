@@ -298,6 +298,7 @@ async function pushUpdateToDeployAndOpenCode(proyecto) {
   for (const [nombre, contenido] of Object.entries(generados)) {
     if (nombre.startsWith('_')) continue;
     const rutaArchivo = path.join(targetDir, nombre);
+    await fs.mkdir(path.dirname(rutaArchivo), { recursive: true });
     const contenidoStr = typeof contenido === 'string' ? contenido : JSON.stringify(contenido, null, 2);
     await fs.writeFile(rutaArchivo, contenidoStr, 'utf-8');
     archivosActualizados.push(nombre);
@@ -585,6 +586,7 @@ app.post('/api/projects/:id/deploy', asyncHandler(async (req, res) => {
   for (const [nombre, contenido] of Object.entries(generados)) {
     if (nombre.startsWith('_')) continue;
     const rutaArchivo = path.join(targetDir, nombre);
+    await fs.mkdir(path.dirname(rutaArchivo), { recursive: true });
     const contenidoStr = typeof contenido === 'string' ? contenido : JSON.stringify(contenido, null, 2);
     await fs.writeFile(rutaArchivo, contenidoStr, 'utf-8');
   }
