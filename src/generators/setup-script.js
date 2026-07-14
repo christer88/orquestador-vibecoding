@@ -116,7 +116,7 @@ curl -fsSL https://raw.githubusercontent.com/DeusData/codebase-memory-mcp/main/i
 ${projectConfig.skills && projectConfig.skills.engram ? `
 echo "📥 Instalando Engram..."
 export PATH=$PATH:$HOME/.go/bin
-go install github.com/Gentleman-Programming/engram@latest
+    go install github.com/Gentleman-Programming/engram/cmd/engram@latest
 engram setup opencode
 ` : ''}
 ${projectConfig.skills && projectConfig.skills.specKit ? `
