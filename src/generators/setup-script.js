@@ -124,7 +124,7 @@ echo "📥 Instalando Spec-Kit..."
 curl -LsSf https://astral.sh/uv/install.sh | sh
 export PATH=$PATH:$HOME/.local/bin
 uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
-specify init . --integration opencode
+specify init . --integration opencode --force
 ` : ''}
 # ----------------------------------------
 
