@@ -1,0 +1,22 @@
+{
+  "name": "Ollama Cloud: GLM-5.2 (Principal) + Kimi 2.7 + DeepSeek Flash",
+  "description": "Plantilla pura en Ollama Cloud usando GLM-5.2 para orquestación, Kimi 2.7 para código, y DeepSeek-V4-Flash para agentes básicos y rápidos.",
+  "providers": ["ollama-cloud"],
+  "accounts": {
+    "ollama-cloud": [{ "id": "ollama-cloud-1", "label": "Ollama Cloud API" }]
+  },
+  "agents": {
+    "sisyphus": { "model": "glm-5.2", "source": "ollama-cloud-1", "fallbacks": [] },
+    "hephaestus": { "model": "kimi-k2.7-code", "source": "ollama-cloud-1", "fallbacks": [] },
+    "oracle": { "model": "deepseek-v4-flash", "source": "ollama-cloud-1", "fallbacks": [] },
+    "librarian": { "model": "deepseek-v4-flash", "source": "ollama-cloud-1", "fallbacks": [] },
+    "explore": { "model": "kimi-k2.7-code", "source": "ollama-cloud-1", "fallbacks": [] },
+    "multimodal-looker": { "model": "glm-5.2", "source": "ollama-cloud-1", "fallbacks": [] },
+    "prometheus": { "model": "glm-5.2", "source": "ollama-cloud-1", "fallbacks": [] },
+    "metis": { "model": "kimi-k2.7-code", "source": "ollama-cloud-1", "fallbacks": [] },
+    "momus": { "model": "deepseek-v4-flash", "source": "ollama-cloud-1", "fallbacks": [] },
+    "atlas": { "model": "kimi-k2.7-code", "source": "ollama-cloud-1", "fallbacks": [] },
+    "code-reviewer": { "model": "glm-5.2", "source": "ollama-cloud-1", "fallbacks": [] },
+    "sisyphus-junior": { "model": "deepseek-v4-flash", "source": "ollama-cloud-1", "fallbacks": [] }
+  }
+}
