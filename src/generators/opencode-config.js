@@ -100,11 +100,19 @@ const CAVOTI_MODEL_META = {
 
 export async function generate(projectConfig) {
   const plugins = ["oh-my-openagent"];
-  if (!projectConfig.skills || projectConfig.skills.uiPro !== false) {
-    plugins.push("ui-ux-pro-max");
-  }
-  if (projectConfig.skills && projectConfig.skills.ponytail) {
-    plugins.push("@dietrichgebert/ponytail");
+  if (projectConfig.skills) {
+    if (projectConfig.skills.uiPro) {
+      plugins.push("ui-ux-pro-max");
+    }
+    if (projectConfig.skills.ponytail) {
+      plugins.push("@dietrichgebert/ponytail");
+    }
+    if (projectConfig.skills.caveman) {
+      plugins.push("@juliusbrussee/caveman");
+    }
+    if (projectConfig.skills.specKit) {
+      plugins.push("specify");
+    }
   }
 
   const config = {
@@ -283,6 +291,12 @@ export async function generate(projectConfig) {
       mcpConfig['codebase-memory'] = {
         type: 'local',
         command: ['bash', '-c', '$HOME/.local/bin/codebase-memory-mcp']
+      };
+    }
+    if (projectConfig.skills.githubMcp) {
+      mcpConfig['github'] = {
+        type: 'local',
+        command: ['npx', '-y', '@modelcontextprotocol/server-github']
       };
     }
     if (Object.keys(mcpConfig).length > 0) {

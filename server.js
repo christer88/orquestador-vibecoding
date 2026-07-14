@@ -354,6 +354,30 @@ async function pushUpdateToDeployAndOpenCode(proyecto) {
     } catch (e) {}
   } catch (envErr) {}
 
+  try {
+    const gitDir = path.join(targetDir, '.git');
+    try { await fs.access(gitDir); } catch(e) { throw new Error('No git repo'); }
+    const hookDir = path.join(gitDir, 'hooks');
+    await fs.mkdir(hookDir, { recursive: true });
+    
+    const hookScript = `#!/bin/bash
+# Auto-generado por el Orquestador VibeCoding
+echo "🔄 Actualizando dependencias de Skills y MCPs en background..."
+(
+  npm update -g @modelcontextprotocol/server-github >/dev/null 2>&1 || true
+  npm update -g @juliusbrussee/caveman >/dev/null 2>&1 || true
+  npm update -g @dietrichgebert/ponytail >/dev/null 2>&1 || true
+  uv tool upgrade specify-cli >/dev/null 2>&1 || true
+  go install github.com/joshua-fish/engram/cmd/engram@latest >/dev/null 2>&1 || true
+) &
+`;
+    const hookPath = path.join(hookDir, 'post-merge');
+    await fs.writeFile(hookPath, hookScript, 'utf-8');
+    await fs.chmod(hookPath, 0o755);
+  } catch (e) {
+    // Si no es repositorio git o falla, ignorar.
+  }
+
   await escribirJSON(path.join(targetDir, 'project.json'), proyecto);
   return { ok: true, targetDir, archivos: archivosActualizados, keysInyectadas };
 }
@@ -392,11 +416,33 @@ app.get('/api/projects/:id', asyncHandler(async (req, res) => {
 }));
 
 /**
+ * Inyecta el token de GitHub en ~/.bashrc de manera segura.
+ */
+async function injectGithubToken(token) {
+  if (!token) return;
+  try {
+    const { execSync } = await import('node:child_process');
+    const bashrc = path.join(process.env.HOME || '/home/srvdes', '.bashrc');
+    const safeToken = token.replace(/"/g, '\\"');
+    execSync(`grep -q 'export GITHUB_PERSONAL_ACCESS_TOKEN' ${bashrc} || echo '\\nexport GITHUB_PERSONAL_ACCESS_TOKEN="DUMMY"' >> ${bashrc}`);
+    execSync(`sed -i 's/^export GITHUB_PERSONAL_ACCESS_TOKEN=.*/export GITHUB_PERSONAL_ACCESS_TOKEN="${safeToken}"/g' ${bashrc}`);
+    console.log('✅ Token de GitHub inyectado en ~/.bashrc de forma segura.');
+  } catch (e) {
+    console.error('⚠️ Error al inyectar token de GitHub:', e.message);
+  }
+}
+
+/**
  * POST /api/projects — Crear un nuevo proyecto
  * Body: { name, description, template?, providers?, agents?, accounts? }
  */
 app.post('/api/projects', asyncHandler(async (req, res) => {
   await asegurarDirectorio(DIRS.projects);
+
+  if (req.body.githubToken) {
+    await injectGithubToken(req.body.githubToken);
+    delete req.body.githubToken;
+  }
 
   const id = uuidv4();
   const ahora = new Date().toISOString();
@@ -447,6 +493,11 @@ app.post('/api/projects', asyncHandler(async (req, res) => {
  * PUT /api/projects/:id — Actualizar un proyecto existente
  */
 app.put('/api/projects/:id', asyncHandler(async (req, res) => {
+  if (req.body.githubToken) {
+    await injectGithubToken(req.body.githubToken);
+    delete req.body.githubToken;
+  }
+
   const rutaProyecto = path.join(DIRS.projects, `${req.params.id}.json`);
   const existente = await leerJSON(rutaProyecto);
 

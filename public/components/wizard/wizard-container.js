@@ -60,6 +60,10 @@ export default {
               <p class="form-hint" style="margin-top: var(--space-1); margin-left: 28px;">Asistente minimalista (escribe solo el código necesario).</p>
             </div>
             <div class="form-group" style="margin-bottom: var(--space-3);">
+              <label class="form-checkbox"><input type="checkbox" id="skill-caveman"><span class="form-checkbox__label">Caveman</span></label>
+              <p class="form-hint" style="margin-top: var(--space-1); margin-left: 28px;">Comunicación ultraconcisa para ahorrar un 70% de tokens.</p>
+            </div>
+            <div class="form-group" style="margin-bottom: var(--space-3);">
               <label class="form-checkbox"><input type="checkbox" id="skill-codebasememory"><span class="form-checkbox__label">Codebase-Memory-MCP</span></label>
               <p class="form-hint" style="margin-top: var(--space-1); margin-left: 28px;">Motor ultrarrápido de inteligencia de código y AST.</p>
             </div>
@@ -70,6 +74,14 @@ export default {
             <div class="form-group" style="margin-bottom: var(--space-3);">
               <label class="form-checkbox"><input type="checkbox" id="skill-speckit"><span class="form-checkbox__label">Spec-Kit</span></label>
               <p class="form-hint" style="margin-top: var(--space-1); margin-left: 28px;">Herramientas para Spec-Driven Development.</p>
+            </div>
+            <div class="form-group" style="margin-bottom: var(--space-3);">
+              <label class="form-checkbox"><input type="checkbox" id="skill-githubmcp"><span class="form-checkbox__label">GitHub (MCP)</span></label>
+              <p class="form-hint" style="margin-top: var(--space-1); margin-left: 28px;">Integración oficial para interactuar con repositorios y PRs en GitHub.</p>
+              <div id="github-token-container" style="display: none; margin-top: 8px; margin-left: 28px;">
+                <input type="password" id="github-token" class="form-input" placeholder="ghp_... (Opcional, solo para inyectar una vez)" style="font-size: 0.85em; padding: 6px;">
+                <p class="form-hint" style="margin-top: 4px; font-size: 0.8em; color: var(--text-secondary);">El token se inyectará en ~/.bashrc y no se guardará en la base de datos web.</p>
+              </div>
             </div>
           </div>
           
@@ -123,6 +135,7 @@ export default {
     const checkSkills = () => {
       const uipro = document.getElementById('skill-uipro').checked;
       const ponytail = document.getElementById('skill-ponytail').checked;
+      const caveman = document.getElementById('skill-caveman').checked;
       const codebase = document.getElementById('skill-codebasememory').checked;
       const engram = document.getElementById('skill-engram').checked;
       
@@ -130,6 +143,16 @@ export default {
       if (uipro && ponytail) {
         warningsHtml += `<div style="padding: 10px; background: rgba(255,50,50,0.1); border: 1px solid red; border-radius: 4px; color: red; margin-bottom: 8px;">
           <strong>🚨 Conflicto Crítico:</strong> Tienes activo UI/UX Pro (diseños ricos) y Ponytail (minimalismo extremo). El agente recibirá instrucciones contradictorias. Te sugerimos apagar uno.
+        </div>`;
+      }
+      if (uipro && caveman) {
+        warningsHtml += `<div style="padding: 10px; background: rgba(255,50,50,0.1); border: 1px solid red; border-radius: 4px; color: red; margin-bottom: 8px;">
+          <strong>🚨 Conflicto Crítico:</strong> UI/UX Pro y Caveman pueden generar resultados mixtos.
+        </div>`;
+      }
+      if (ponytail && caveman) {
+        warningsHtml += `<div style="padding: 10px; background: rgba(255,200,0,0.1); border: 1px solid orange; border-radius: 4px; color: orange; margin-bottom: 8px;">
+          <strong>⚠️ Advertencia:</strong> Tienes Ponytail y Caveman activos. Son redundantes pero el agente será extremadamente parco en palabras y código.
         </div>`;
       }
       if (codebase && engram) {
@@ -140,9 +163,20 @@ export default {
       document.getElementById('skills-warnings').innerHTML = warningsHtml;
     };
 
-    ['skill-uipro', 'skill-ponytail', 'skill-codebasememory', 'skill-engram'].forEach(id => {
-      document.getElementById(id).addEventListener('change', checkSkills);
+    ['skill-uipro', 'skill-ponytail', 'skill-caveman', 'skill-codebasememory', 'skill-engram', 'skill-speckit', 'skill-githubmcp'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('change', checkSkills);
     });
+    
+    const ghCheckbox = document.getElementById('skill-githubmcp');
+    if (ghCheckbox) {
+      ghCheckbox.addEventListener('change', (e) => {
+        const container = document.getElementById('github-token-container');
+        if (container) {
+          container.style.display = e.target.checked ? 'block' : 'none';
+        }
+      });
+    }
 
     if (this.isEditMode) {
       await this.loadProjectForEdit(this.projectId);
@@ -163,9 +197,14 @@ export default {
         if (p.skills) {
           document.getElementById('skill-uipro').checked = p.skills.uiPro !== false;
           document.getElementById('skill-ponytail').checked = !!p.skills.ponytail;
+          document.getElementById('skill-caveman').checked = !!p.skills.caveman;
           document.getElementById('skill-codebasememory').checked = !!p.skills.codebaseMemory;
           document.getElementById('skill-engram').checked = !!p.skills.engram;
           document.getElementById('skill-speckit').checked = !!p.skills.specKit;
+          
+          const ghCheckbox = document.getElementById('skill-githubmcp');
+          ghCheckbox.checked = !!p.skills.githubMcp;
+          ghCheckbox.dispatchEvent(new Event('change'));
         }
         
         // Trigger validation check to show any initial warnings
@@ -287,11 +326,18 @@ export default {
         skills: {
           uiPro: document.getElementById('skill-uipro').checked,
           ponytail: document.getElementById('skill-ponytail').checked,
+          caveman: document.getElementById('skill-caveman').checked,
           codebaseMemory: document.getElementById('skill-codebasememory').checked,
           engram: document.getElementById('skill-engram').checked,
-          specKit: document.getElementById('skill-speckit').checked
+          specKit: document.getElementById('skill-speckit').checked,
+          githubMcp: document.getElementById('skill-githubmcp').checked
         }
       };
+
+      const tokenVal = document.getElementById('github-token')?.value.trim();
+      if (tokenVal) {
+        data.githubToken = tokenVal;
+      }
 
       const url = this.isEditMode ? `/api/projects/${this.projectId}` : '/api/projects';
       const method = this.isEditMode ? 'PUT' : 'POST';
