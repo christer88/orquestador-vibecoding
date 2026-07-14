@@ -5,7 +5,7 @@ export async function generate(projectConfig) {
       mcp: {
         engram: {
           type: 'local',
-          command: ['engram', 'mcp', '--tools=agent']
+          command: ['bash', '-c', '$HOME/go/bin/engram mcp --tools=agent']
         }
       }
     };
