@@ -115,4 +115,13 @@ npx pm2 start server.js --name orquestador
 npx pm2 save
 ```
 
+### 🟠 Advertencia: "In-memory PM2 is out-of-date"
+Tras ejecutar comandos de PM2 en la consola, podrías ver este mensaje repetidas veces:
+`>>>> In-memory PM2 is out-of-date, do: $ pm2 update`
+
+**Significado:** Tu servidor tiene una versión de PM2 instalada en disco más reciente que la que está corriendo en la memoria RAM en ese momento. No afecta el funcionamiento del Orquestador, pero para actualizar el demonio interno y limpiar la advertencia, simplemente ejecuta:
+```bash
+npx pm2 update
+```
+
 ¡Bienvenido a la programación del futuro!
