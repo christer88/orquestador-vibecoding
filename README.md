@@ -156,8 +156,10 @@ git pull origin main
 # 3. Instala posibles dependencias nuevas de Node (como multer, unzipper, etc.)
 npm install
 
-# 4. Reinicia el sistema limpiamente
-npx pm2 restart orquestador --update-env
+# 4. Reinicia el sistema limpiamente para recargar el entorno
+npx pm2 delete orquestador
+npx pm2 start server.js --name orquestador
+npx pm2 save
 ```
 Tus archivos `.env` y de base de datos (`accounts.json`) no se verán afectados, ya que están estrictamente protegidos por el `.gitignore`.
 
