@@ -1,0 +1,22 @@
+{
+  "name": "Ollama Cloud: GLM-5.2 + Kimi 2.7 + Qwen 3.5",
+  "description": "Plantilla pura en Ollama Cloud distribuyendo GLM-5.2 para orquestación, Kimi 2.7 para código y Qwen 3.5 para soporte ligero.",
+  "providers": ["ollama-cloud"],
+  "accounts": {
+    "ollama-cloud": [{ "id": "ollama-cloud-1", "label": "Ollama Cloud API" }]
+  },
+  "agents": {
+    "sisyphus": { "model": "glm-5.2", "source": "ollama-cloud-1", "fallbacks": [] },
+    "hephaestus": { "model": "kimi-k2.7-code", "source": "ollama-cloud-1", "fallbacks": [] },
+    "oracle": { "model": "qwen3.5", "source": "ollama-cloud-1", "fallbacks": [] },
+    "librarian": { "model": "qwen3.5", "source": "ollama-cloud-1", "fallbacks": [] },
+    "explore": { "model": "kimi-k2.7-code", "source": "ollama-cloud-1", "fallbacks": [] },
+    "multimodal-looker": { "model": "glm-5.2", "source": "ollama-cloud-1", "fallbacks": [] },
+    "prometheus": { "model": "glm-5.2", "source": "ollama-cloud-1", "fallbacks": [] },
+    "metis": { "model": "kimi-k2.7-code", "source": "ollama-cloud-1", "fallbacks": [] },
+    "momus": { "model": "qwen3.5", "source": "ollama-cloud-1", "fallbacks": [] },
+    "atlas": { "model": "kimi-k2.7-code", "source": "ollama-cloud-1", "fallbacks": [] },
+    "code-reviewer": { "model": "glm-5.2", "source": "ollama-cloud-1", "fallbacks": [] },
+    "sisyphus-junior": { "model": "qwen3.5", "source": "ollama-cloud-1", "fallbacks": [] }
+  }
+}
