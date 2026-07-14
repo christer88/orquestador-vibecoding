@@ -262,5 +262,15 @@ export async function generate(projectConfig) {
     }
   }
 
+  // Integración de Skills MCP directamente en opencode.json
+  if (projectConfig.skills && projectConfig.skills.engram) {
+    config.mcp = {
+      engram: {
+        type: 'local',
+        command: ['bash', '-c', '$HOME/go/bin/engram mcp --tools=agent']
+      }
+    };
+  }
+
   return JSON.stringify(config, null, 2);
 }
