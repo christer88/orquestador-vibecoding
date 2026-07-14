@@ -60,7 +60,7 @@ export default {
               <p class="form-hint" style="margin-top: var(--space-1); margin-left: 28px;">Asistente minimalista (escribe solo el código necesario).</p>
             </div>
             <div class="form-group" style="margin-bottom: var(--space-3);">
-              <label class="form-checkbox"><input type="checkbox" id="skill-codebasememory"><span class="form-checkbox__label">Codebase-Memory-MCP</span></label>
+              <label class="form-checkbox"><input type="checkbox" id="skill-codegraph"><span class="form-checkbox__label">CodeGraph (Built-in)</span></label>
               <p class="form-hint" style="margin-top: var(--space-1); margin-left: 28px;">Motor ultrarrápido de inteligencia de código y AST.</p>
             </div>
             <div class="form-group" style="margin-bottom: var(--space-3);">
@@ -123,7 +123,7 @@ export default {
     const checkSkills = () => {
       const uipro = document.getElementById('skill-uipro').checked;
       const ponytail = document.getElementById('skill-ponytail').checked;
-      const codebase = document.getElementById('skill-codebasememory').checked;
+      const codegraph = document.getElementById('skill-codegraph').checked;
       const engram = document.getElementById('skill-engram').checked;
       
       let warningsHtml = '';
@@ -140,7 +140,7 @@ export default {
       document.getElementById('skills-warnings').innerHTML = warningsHtml;
     };
 
-    ['skill-uipro', 'skill-ponytail', 'skill-codebasememory', 'skill-engram'].forEach(id => {
+    ['skill-uipro', 'skill-ponytail', 'skill-codegraph', 'skill-engram'].forEach(id => {
       document.getElementById(id).addEventListener('change', checkSkills);
     });
 
@@ -163,7 +163,7 @@ export default {
         if (p.skills) {
           document.getElementById('skill-uipro').checked = p.skills.uiPro !== false;
           document.getElementById('skill-ponytail').checked = !!p.skills.ponytail;
-          document.getElementById('skill-codebasememory').checked = !!p.skills.codebaseMemory;
+          document.getElementById('skill-codegraph').checked = !!p.skills.codegraph;
           document.getElementById('skill-engram').checked = !!p.skills.engram;
           document.getElementById('skill-speckit').checked = !!p.skills.specKit;
         }
@@ -287,7 +287,7 @@ export default {
         skills: {
           uiPro: document.getElementById('skill-uipro').checked,
           ponytail: document.getElementById('skill-ponytail').checked,
-          codebaseMemory: document.getElementById('skill-codebasememory').checked,
+          codegraph: document.getElementById('skill-codegraph').checked,
           engram: document.getElementById('skill-engram').checked,
           specKit: document.getElementById('skill-speckit').checked
         }

@@ -4,7 +4,6 @@ import * as envGen from '../generators/env-generator.js';
 import * as readmeGen from '../generators/readme-generator.js';
 import * as setupGen from '../generators/setup-script.js';
 import * as mcpGen from '../generators/mcp-config.js';
-import * as clinerulesGen from '../generators/clinerules-generator.js';
 import { autoGenerateFallbacks } from './fallback-router.js';
 
 export async function validateConfig(config) {
@@ -45,13 +44,6 @@ export async function generateAllConfigs(projectConfig) {
   if (mcpConfig) {
     results['.opencode/mcp.json'] = mcpConfig;
   }
-
-  const clinerulesConfig = await clinerulesGen.generate(projectConfig);
-  if (clinerulesConfig) {
-    results['.clinerules'] = clinerulesConfig;
-  }
-
-
   
   return results;
 }
