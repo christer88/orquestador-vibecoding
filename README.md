@@ -25,6 +25,7 @@ El verdadero poder del Orquestador VibeCoding radica en su capacidad para inyect
 *   **UI/UX Pro Max**: Transforma al agente en un diseñador senior. Lo obliga a usar CSS avanzado, glassmorphism, micro-animaciones y paletas vibrantes.
 *   **Ponytail**: El asistente minimalista. Le prohíbe emitir saludos, disculpas o explicaciones; solo entrega el código crudo necesario para resolver el problema.
 *   **Caveman**: Lleva la concisión al extremo, eliminando palabras de transición para reducir el consumo de tokens en más de un 70%, sin perder precisión técnica.
+*   **Token Optimizer**: Funciona en segundo plano purgando los "tokens fantasma" (información irrelevante o muerta) de la ventana de contexto del agente. Previene que el agente alucine y decaiga en calidad durante sesiones de programación muy largas.
 
 ### 🔌 Servidores del Sistema (MCPs)
 *   **Codebase-Memory MCP**: Motor hiperveloz escrito en Go que indexa tu repositorio usando Árboles de Sintaxis Abstracta (AST). Permite al agente buscar funciones, rastrear dependencias y leer el mapa de la arquitectura a velocidades absurdas.
@@ -89,5 +90,29 @@ La interfaz web estará lista en el puerto `3847`. Visita `http://localhost:3847
 4.  **VibeCoding**: Entra a tu carpeta de proyecto y escribe `bunx oh-my-opencode`. El agente estará equipado, ruteado, perfilado (como un diseñador o un cavernícola) y con sus memorias (Engram/Codebase) listas para servirte.
 
 > **Tip de Supervivencia**: Si añades una nueva API Key manual en el archivo `.env`, recuerda reiniciar PM2 para recargar las variables del sistema operativo (`npx pm2 restart orquestador --update-env`).
+
+---
+
+## 🔄 Actualización y Solución de Problemas (Troubleshooting)
+
+### Cómo actualizar el Orquestador desde GitHub
+Si subimos nuevas características al repositorio, puedes actualizar tu instalación local sin perder tus configuraciones ni bases de datos (están protegidas por `.gitignore`):
+
+```bash
+cd ~/orquestador-vibecoding
+git pull origin main
+npm install
+```
+
+### 🔴 Evitar que la versión vieja quede pegada en memoria
+Si actualizas el código, cambias llaves manuales en el `.env`, o restauras un backup, y notas que el sistema sigue comportándose con la configuración antigua (ej. dando Error 401 por una API Key vieja), **el problema es la memoria caché de PM2**. 
+
+Node.js no sobrescribe variables de entorno ya cargadas en memoria, por lo que un simple reinicio a veces no basta. Para forzar una recarga totalmente limpia y matar la versión vieja, ejecuta:
+
+```bash
+npx pm2 delete orquestador
+npx pm2 start server.js --name orquestador
+npx pm2 save
+```
 
 ¡Bienvenido a la programación del futuro!
