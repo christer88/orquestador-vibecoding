@@ -138,7 +138,8 @@ export default {
         { id: 'minimax-1', label: 'Default MiniMax' },
         { id: 'nvidia-1', label: 'Default NVIDIA API' },
         { id: 'cavoti-1', label: 'Cavoti GPT' },
-        { id: 'cavoti-2', label: 'Cavoti Claude' }
+        { id: 'cavoti-2', label: 'Cavoti Claude' },
+        { id: 'ollama-cloud-1', label: 'Ollama Cloud' }
       ];
 
       defaults.forEach(d => {

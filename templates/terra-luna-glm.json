@@ -1,0 +1,23 @@
+{
+  "name": "Terra + Luna + GLM 5.2",
+  "description": "Plantilla combinando GPT-5.6 Terra (orquestación premium) y GPT-5.6 Luna (ejecución económica) de Cavoti con GLM 5.2 de Ollama Cloud para razonamiento intermedio.",
+  "providers": ["cavoti", "ollama-cloud"],
+  "accounts": {
+    "cavoti": [{ "id": "cavoti-1", "label": "Cavoti GPT" }],
+    "ollama-cloud": [{ "id": "ollama-cloud-1", "label": "Ollama Cloud" }]
+  },
+  "agents": {
+    "sisyphus": { "model": "gpt-5.6-terra", "source": "cavoti-1", "fallbacks": [] },
+    "hephaestus": { "model": "gpt-5.6-luna", "source": "cavoti-1", "fallbacks": [] },
+    "oracle": { "model": "glm-5.2", "source": "ollama-cloud-1", "fallbacks": [] },
+    "librarian": { "model": "gpt-5.6-luna", "source": "cavoti-1", "fallbacks": [] },
+    "explore": { "model": "gpt-5.6-luna", "source": "cavoti-1", "fallbacks": [] },
+    "multimodal-looker": { "model": "glm-5.2", "source": "ollama-cloud-1", "fallbacks": [] },
+    "prometheus": { "model": "gpt-5.6-terra", "source": "cavoti-1", "fallbacks": [] },
+    "metis": { "model": "glm-5.2", "source": "ollama-cloud-1", "fallbacks": [] },
+    "momus": { "model": "gpt-5.6-luna", "source": "cavoti-1", "fallbacks": [] },
+    "atlas": { "model": "glm-5.2", "source": "ollama-cloud-1", "fallbacks": [] },
+    "code-reviewer": { "model": "gpt-5.6-terra", "source": "cavoti-1", "fallbacks": [] },
+    "sisyphus-junior": { "model": "gpt-5.6-luna", "source": "cavoti-1", "fallbacks": [] }
+  }
+}

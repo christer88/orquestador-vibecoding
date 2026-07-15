@@ -1,0 +1,22 @@
+{
+  "name": "Terra + Luna",
+  "description": "Plantilla exclusiva de Cavoti usando GPT-5.6 Terra para orquestación y arquitectura, y GPT-5.6 Luna para ejecución y tareas rápidas.",
+  "providers": ["cavoti"],
+  "accounts": {
+    "cavoti": [{ "id": "cavoti-1", "label": "Cavoti GPT" }]
+  },
+  "agents": {
+    "sisyphus": { "model": "gpt-5.6-terra", "source": "cavoti-1", "fallbacks": [] },
+    "hephaestus": { "model": "gpt-5.6-luna", "source": "cavoti-1", "fallbacks": [] },
+    "oracle": { "model": "gpt-5.6-terra", "source": "cavoti-1", "fallbacks": [] },
+    "librarian": { "model": "gpt-5.6-luna", "source": "cavoti-1", "fallbacks": [] },
+    "explore": { "model": "gpt-5.6-luna", "source": "cavoti-1", "fallbacks": [] },
+    "multimodal-looker": { "model": "gpt-5.6-terra", "source": "cavoti-1", "fallbacks": [] },
+    "prometheus": { "model": "gpt-5.6-terra", "source": "cavoti-1", "fallbacks": [] },
+    "metis": { "model": "gpt-5.6-terra", "source": "cavoti-1", "fallbacks": [] },
+    "momus": { "model": "gpt-5.6-luna", "source": "cavoti-1", "fallbacks": [] },
+    "atlas": { "model": "gpt-5.6-terra", "source": "cavoti-1", "fallbacks": [] },
+    "code-reviewer": { "model": "gpt-5.6-terra", "source": "cavoti-1", "fallbacks": [] },
+    "sisyphus-junior": { "model": "gpt-5.6-luna", "source": "cavoti-1", "fallbacks": [] }
+  }
+}
