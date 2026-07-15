@@ -43,7 +43,7 @@ export function autoGenerateFallbacks(config) {
   // Lógica para autogenerar fallbacks para cada agente en el config
   // Si no tienen fallbacks definidos, los autogenera basándose en cuentas
   for (const [agentId, agentConfig] of Object.entries(config.agents || {})) {
-    if (!agentConfig.fallbacks || agentConfig.fallbacks.length === 0) {
+    if (agentConfig.fallbacks === undefined) {
       agentConfig.fallbacks = buildFallbackChain(
         agentId, 
         agentConfig.model, 

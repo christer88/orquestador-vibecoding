@@ -192,12 +192,17 @@ async function resolverProyecto(proyecto) {
   for (const providerId of resuelto.providers || []) {
     const regAccounts = registeredAccounts.filter(a => a.provider === providerId && a.active !== false);
     if (regAccounts.length > 0) {
-      resuelto.accounts[providerId] = regAccounts.map((a, idx) => ({
-        id: `${providerId}-${idx + 1}`,
-        label: a.label,
-        envKey: a.envKey,
-        active: a.active
-      }));
+      resuelto.accounts[providerId] = regAccounts.map((a, idx) => {
+        const projAcc = resuelto.accounts[providerId]?.[idx] || {};
+        return {
+          id: `${providerId}-${idx + 1}`,
+          label: a.label,
+          envKey: a.envKey,
+          active: a.active,
+          keyType: projAcc.keyType,
+          models: projAcc.models
+        };
+      });
     } else {
       // Si no hay registradas, usar las del proyecto o por defecto
       const projAccounts = resuelto.accounts[providerId] || [];

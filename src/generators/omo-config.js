@@ -28,11 +28,23 @@ export async function generate(projectConfig) {
       return `${source}-anthropic`;
     }
     // Cavoti: modelos Claude usan API key separada, necesitan sufijo -claude
-    if (source && source.startsWith('cavoti') && CLAUDE_MODELS.includes(model)) {
+    // EXCEPTO si la cuenta ya es de tipo Claude (keyType=claude en el projectConfig)
+    const sourceAcc = findAccountById(projectConfig, source);
+    if (source && source.startsWith('cavoti') && CLAUDE_MODELS.includes(model) && sourceAcc?.keyType !== 'claude') {
       return `${source}-claude`;
     }
     return source;
   };
+
+  // Helper: buscar una cuenta por id en todos los proveedores del projectConfig
+  function findAccountById(cfg, accId) {
+    for (const prov of Object.keys(cfg.accounts || {})) {
+      for (const acc of cfg.accounts[prov] || []) {
+        if (acc.id === accId) return acc;
+      }
+    }
+    return null;
+  }
 
   for (const [agentId, agentConfig] of Object.entries(projectConfig.agents || {})) {
     const fallbacks = (agentConfig.fallbacks || []).map(fb => {

@@ -61,6 +61,9 @@ const PROVIDER_MODELS = {
   },
   'cavoti': {
     'gpt-5.5': 'GPT-5.5',
+    'gpt-5.6-terra': 'GPT-5.6 Terra',
+    'gpt-5.6-sol': 'GPT-5.6 Sol',
+    'gpt-5.6-luna': 'GPT-5.6 Luna',
     'gpt-5.4': 'GPT-5.4',
     'gpt-5.4-mini': 'GPT-5.4 Mini',
     'codex-auto-review': 'Codex Auto Review',
@@ -95,7 +98,10 @@ const CAVOTI_MODEL_META = {
   'codex-auto-review': { limit: { context: 200000, output: 64000 }, variants: ['low','medium','high'] },
   'gpt-5.5': { limit: { context: 1050000, output: 128000 }, variants: ['low','medium','high','xhigh'] },
   'gpt-5.4': { limit: { context: 1050000, output: 128000 }, variants: ['low','medium','high','xhigh'] },
-  'gpt-5.4-mini': { limit: { context: 400000, output: 128000 }, variants: ['low','medium','high','xhigh'] }
+  'gpt-5.4-mini': { limit: { context: 400000, output: 128000 }, variants: ['low','medium','high','xhigh'] },
+  'gpt-5.6-terra': { limit: { context: 1050000, output: 128000 }, variants: ['low','medium','high','xhigh'] },
+  'gpt-5.6-sol': { limit: { context: 1050000, output: 128000 }, variants: ['low','medium','high','xhigh'] },
+  'gpt-5.6-luna': { limit: { context: 400000, output: 128000 }, variants: ['low','medium','high','xhigh'] }
 };
 
 export async function generate(projectConfig) {
@@ -181,14 +187,19 @@ export async function generate(projectConfig) {
       } else if (providerId === 'cavoti') {
         providerConfig.api = 'openai';
         providerConfig.options.baseURL = "https://cavoti.com/v1";
-        // User explicitly requested these keys for Cavoti GPT vs Claude
-        providerConfig.options.apiKey = process.env.CAVOTI_GPT_KEY || `{env:CAVOTI_GPT_KEY}`;
 
         const CLAUDE_MODELS = ['claude-haiku-4-5', 'claude-haiku-4-5-20251001', 'claude-opus-4-5', 'claude-opus-4-5-20251101', 'claude-opus-4-6', 'claude-opus-4-7', 'claude-opus-4-8', 'claude-sonnet-4-5-20250929', 'claude-sonnet-4-6'];
-        // If account specifies models, use that list; otherwise assume all provider models are available
         const accModelList = acc.models && acc.models.length ? acc.models : Object.keys(PROVIDER_MODELS['cavoti'] || {});
         const hasClaude = accModelList.some(m => CLAUDE_MODELS.includes(m));
-        if (hasClaude) {
+        const hasGpt = accModelList.some(m => !CLAUDE_MODELS.includes(m));
+
+        // Support explicit keyType per account: 'gpt' (default) or 'claude'
+        if (acc.keyType === 'claude') {
+          // Claude-only account: use CAVOTI_CLAUDE_KEY directly, no -claude suffix
+          providerConfig.options.apiKey = process.env.CAVOTI_CLAUDE_KEY || `{env:CAVOTI_CLAUDE_KEY}`;
+        } else if (hasClaude && hasGpt) {
+          // Mixed account: GPT key on main, separate -claude entry for Claude models
+          providerConfig.options.apiKey = process.env.CAVOTI_GPT_KEY || `{env:CAVOTI_GPT_KEY}`;
           config.provider[`${acc.id}-claude`] = {
             api: 'openai',
             options: {
@@ -199,6 +210,13 @@ export async function generate(projectConfig) {
             },
             models: {}
           };
+        } else {
+          // GPT-only or Claude-only account without keyType
+          if (hasClaude && !hasGpt) {
+            providerConfig.options.apiKey = process.env.CAVOTI_CLAUDE_KEY || `{env:CAVOTI_CLAUDE_KEY}`;
+          } else {
+            providerConfig.options.apiKey = process.env.CAVOTI_GPT_KEY || `{env:CAVOTI_GPT_KEY}`;
+          }
         }
       } else if (providerId === 'ollama-cloud') {
         providerConfig.api = 'openai';
@@ -219,7 +237,10 @@ export async function generate(projectConfig) {
       const modelMap = PROVIDER_MODELS[providerId] || {};
       providerConfig.models = {};
       const ANTHROPIC_MODELS = ['minimax-m3', 'minimax-m2.7', 'minimax-m2.5', 'qwen3.7-max', 'qwen3.7-plus', 'qwen3.6-plus'];
+      // If account specifies models, only declare those; otherwise declare all provider models
+      const accModelsFilter = acc.models && acc.models.length > 0 ? new Set(acc.models) : null;
       for (const [modelId, modelName] of Object.entries(modelMap)) {
+        if (accModelsFilter && !accModelsFilter.has(modelId)) continue;
         let realModelId = modelId;
         if (providerId === 'openrouter') {
           if (modelId === 'kimi-k2.6') realModelId = 'moonshot/kimi-k2.6';
@@ -242,7 +263,7 @@ export async function generate(projectConfig) {
               name: modelName
             };
           }
-        } else if (providerId === 'cavoti' && ['claude-haiku-4-5', 'claude-haiku-4-5-20251001', 'claude-opus-4-5', 'claude-opus-4-5-20251101', 'claude-opus-4-6', 'claude-opus-4-7', 'claude-opus-4-8', 'claude-sonnet-4-5-20250929', 'claude-sonnet-4-6'].includes(modelId)) {
+        } else if (providerId === 'cavoti' && acc.keyType !== 'claude' && ['claude-haiku-4-5', 'claude-haiku-4-5-20251001', 'claude-opus-4-5', 'claude-opus-4-5-20251101', 'claude-opus-4-6', 'claude-opus-4-7', 'claude-opus-4-8', 'claude-sonnet-4-5-20250929', 'claude-sonnet-4-6'].includes(modelId)) {
           if (config.provider[`${acc.id}-claude`]) {
             config.provider[`${acc.id}-claude`].models[modelId] = {
               id: realModelId,
